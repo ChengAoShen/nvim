@@ -1,5 +1,10 @@
 return {
-    "github/copilot.vim",
+    {"github/copilot.vim",
+        config=function ()
+            vim.g.copilot_assume_mapped = true
+        end,
+    },
+
 
     {"nvim-tree/nvim-tree.lua",
         dependencies = "nvim-tree/nvim-web-devicons",
@@ -59,7 +64,7 @@ return {
     {"nvim-telescope/telescope.nvim",
         dependencies = {
             "nvim-lua/plenary.nvim",
-            { 'nvim-telescope/telescope-fzf-native.nvim', 
+            { 'nvim-telescope/telescope-fzf-native.nvim',
                 build = 'make' }
         },
         config = function()
@@ -106,7 +111,7 @@ return {
 
     {"folke/flash.nvim",
     event = "VeryLazy",
-    ---@type Flash.Config
+    -- -@type Flash.Config
     opts = {},
     -- stylua: ignore
     keys = {

@@ -1,5 +1,5 @@
 return {
-        {"folke/tokyonight.nvim", 
+        {"folke/tokyonight.nvim",
         config=function()
             vim.cmd[[colorscheme tokyonight-storm]]
         end},
@@ -9,7 +9,7 @@ return {
         config=function()
             require("lualine").setup({theme='tokyonight-stom'})
         end},
-    
+
         {"akinsho/bufferline.nvim",
         dependencies = "nvim-tree/nvim-web-devicons",
         config=function()
@@ -40,5 +40,4 @@ return {
         config=function()
             require("todo-comments").setup()
         end},
-        
 }
