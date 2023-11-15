@@ -8,6 +8,7 @@ return {
 
     {"nvim-tree/nvim-tree.lua",
         dependencies = "nvim-tree/nvim-web-devicons",
+        event="VeryLazy",
         config=function()
             require("nvim-tree").setup(
                 {git = {
@@ -62,6 +63,7 @@ return {
         end},
 
     {"nvim-telescope/telescope.nvim",
+        event="VeryLazy",
         dependencies = {
             "nvim-lua/plenary.nvim",
             { 'nvim-telescope/telescope-fzf-native.nvim',
@@ -101,6 +103,7 @@ return {
         end},
 
     {"nvim-treesitter/nvim-treesitter",
+        event = "VeryLazy",
         build = ":TSUpdate",
         config = function()
             require("nvim-treesitter.configs").setup({
@@ -132,6 +135,24 @@ return {
         config=function()
             require("symbols-outline").setup()
         end},
-
+    { "CRAG666/code_runner.nvim",
+        config = function ()
+            require('code_runner').setup({
+                filetype = {
+                    python = "python3 -u",
+                },
+            })
+        vim.keymap.set("n", "<leader>rc", "<cmd>RunCode<CR>")
+        end },
+    {"sindrets/diffview.nvim" ,
+        event="VeryLazy",
+        config = function()
+            require('diffview').setup()
+        end},
+    {'simrat39/symbols-outline.nvim',
+        event  = "VeryLazy",
+        config=function ()
+            require('symbols-outline').setup()
+        end},
 }
 

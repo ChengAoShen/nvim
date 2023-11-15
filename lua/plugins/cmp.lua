@@ -12,6 +12,7 @@ return {
             "L3MON4D3/LuaSnip",
             "rafamadriz/friendly-snippets",
         },
+        event = "VeryLazy",
         config = function()
             local cmp = require("cmp")
             local luasnip = require("luasnip")
@@ -68,6 +69,7 @@ return {
                         { name = 'buffer' },
                     })
             })
+            require("luasnip.loaders.from_vscode").load()
         end,
     }
 }

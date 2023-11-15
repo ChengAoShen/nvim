@@ -17,6 +17,7 @@ return {
         end},
 
         {"utilyre/barbecue.nvim",
+        event="VeryLazy",
         dependencies = {
             "SmiteshP/nvim-navic",
             "nvim-tree/nvim-web-devicons",},
@@ -25,6 +26,7 @@ return {
         end},
 
         {"lukas-reineke/indent-blankline.nvim",
+        event="VeryLazy",
         config=function()
             require("ibl").setup()
         end},

@@ -30,15 +30,16 @@ opt.splitbelow = true
 opt.exrc = true
 
 vim.o.guifont = "Fira Code:h18"
+-- vim.o.guifont = "Monaspace Radon:h20"
 -- vim.g.neovide_transparency = 0.9
 
 -- autosave
--- vim.api.nvim_create_autocmd({ "InsertLeave" }, {
---     callback = function()
---         vim.fn.execute("silent! write")
---         vim.notify("Autosaved!", vim.log.levels.INFO, {})
---     end,
--- })
+vim.api.nvim_create_autocmd({ "InsertLeave" }, {
+    callback = function()
+        vim.fn.execute("silent! write")
+        vim.notify("Autosaved!", vim.log.levels.INFO, {})
+    end,
+})
 
 -- lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
