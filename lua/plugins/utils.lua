@@ -108,7 +108,7 @@ return {
         config = function()
             require("nvim-treesitter.configs").setup({
                 ensure_installed = "all",
-                highlight = {enable = true,},
+                highlight = {enable = true,disable = { "latex" },},
                 indent = {enable = true,},})
         end},
 
