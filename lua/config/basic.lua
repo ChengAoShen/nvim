@@ -13,16 +13,16 @@ opt.relativenumber = true
 opt.wildmenu = true
 opt.ignorecase = true
 opt.smartcase = true
-opt.completeopt = {"menu","noselect"}
+opt.completeopt = { "menu", "noselect" }
 opt.termguicolors = true
 opt.signcolumn = "yes"
 opt.autoread = true
 opt.swapfile = false
 opt.backup = false
-opt.updatetime=50
+opt.updatetime = 50
 opt.wrap = true
 opt.linebreak = true
-opt.textwidth=80
+opt.textwidth = 80
 opt.mouse = "a"
 opt.undofile = true
 opt.undodir = vim.fn.expand("$HOME/.local/share/nvim/undo")
@@ -46,14 +46,13 @@ vim.api.nvim_create_autocmd({ "InsertLeave" }, {
 -- lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
 end
 vim.opt.rtp:prepend(lazypath)
-

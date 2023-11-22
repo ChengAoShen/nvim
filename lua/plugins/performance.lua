@@ -1,45 +1,59 @@
 return {
-        {"folke/tokyonight.nvim",
-        config=function()
-            vim.cmd[[colorscheme tokyonight-storm]]
-        end},
+    {
+        "folke/tokyonight.nvim",
+        config = function()
+            vim.cmd [[colorscheme tokyonight-storm]]
+        end
+    },
 
-        {"nvim-lualine/lualine.nvim",
+    {
+        "nvim-lualine/lualine.nvim",
         dependencies = "nvim-tree/nvim-web-devicons",
-        config=function()
-            require("lualine").setup({theme='tokyonight-stom'})
-        end},
+        config = function()
+            require("lualine").setup({ theme = 'tokyonight-stom' })
+        end
+    },
 
-        {"akinsho/bufferline.nvim",
+    {
+        "akinsho/bufferline.nvim",
         dependencies = "nvim-tree/nvim-web-devicons",
-        config=function()
+        config = function()
             require("bufferline").setup()
-        end},
+        end
+    },
 
-        {"utilyre/barbecue.nvim",
-        event="VeryLazy",
+    {
+        "utilyre/barbecue.nvim",
+        event = "VeryLazy",
         dependencies = {
             "SmiteshP/nvim-navic",
-            "nvim-tree/nvim-web-devicons",},
-        config=function()
-            require("barbecue").setup({theme='tokyonight-stom'})
-        end},
+            "nvim-tree/nvim-web-devicons", },
+        config = function()
+            require("barbecue").setup({ theme = 'tokyonight-stom' })
+        end
+    },
 
-        {"lukas-reineke/indent-blankline.nvim",
-        event="VeryLazy",
-        config=function()
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        event = "VeryLazy",
+        config = function()
             require("ibl").setup()
-        end},
+        end
+    },
 
-        {'goolord/alpha-nvim',
+    {
+        'goolord/alpha-nvim',
         dependencies = { 'nvim-tree/nvim-web-devicons' },
-        config=function ()
-            require("alpha").setup(require'alpha.themes.dashboard'.config)
-        end},
+        config = function()
+            require("alpha").setup(require 'alpha.themes.dashboard'.config)
+        end
+    },
 
-        {"folke/todo-comments.nvim",
+    {
+        "folke/todo-comments.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
-        config=function()
+        config = function()
             require("todo-comments").setup()
-        end},
+        end
+    },
 }

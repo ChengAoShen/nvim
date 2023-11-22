@@ -1,8 +1,9 @@
-return{
+return {
     -- lsp --
-    {"williamboman/mason.nvim",
+    {
+        "williamboman/mason.nvim",
         dependencies = "williamboman/mason-lspconfig.nvim",
-        event="VeryLazy",
+        event = "VeryLazy",
         config = function()
             require("mason").setup({
                 ui = {
@@ -14,16 +15,25 @@ return{
                 }
             })
             require("mason-lspconfig").setup({
-                ensure_installed={"pyright","lua_ls","clangd","texlab"},
+                ensure_installed = { "pyright", "lua_ls", "clangd", "texlab" },
             })
-        end},
+        end
+    },
 
-    {"neovim/nvim-lspconfig",
-        event="VeryLazy",
+    {
+        "neovim/nvim-lspconfig",
+        event = "VeryLazy",
 
         config = function()
-            require("lspconfig").pyright.setup({})
-
+            require("lspconfig").pyright.setup({
+                settings = {
+                    python = {
+                        analysis = {
+                            typeCheckingMode = "off"
+                        }
+                    },
+                }
+            })
             require("lspconfig").clangd.setup({})
 
             require("lspconfig").texlab.setup({})
@@ -31,7 +41,7 @@ return{
             require("lspconfig").lua_ls.setup({
                 settings = {
                     Lua = {
-                        diagnostics = {globals = {'vim'},},
+                        diagnostics = { globals = { 'vim' }, },
                     },
                 },
             })
@@ -60,6 +70,26 @@ return{
                     end, opts)
                 end,
             })
-        end,},
+        end,
+    },
+    {
+        "jay-babu/mason-null-ls.nvim",
+        event = { "BufReadPre", "BufNewFile", "VeryLazy" },
+        dependencies = {
+            "williamboman/mason.nvim",
+            "jose-elias-alvarez/null-ls.nvim",
+        },
+        config = function()
+            require("mason-null-ls").setup({
+                ensure_installed = { "black" }
+            })
 
+            local null_ls = require("null-ls")
+            require("null-ls").setup({
+                sources = {
+                    null_ls.builtins.formatting.black,
+                },
+            })
+        end,
+    }
 }

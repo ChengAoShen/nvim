@@ -4,7 +4,8 @@ local check_backspace = function()
 end
 
 return {
-    {"hrsh7th/nvim-cmp",
+    {
+        "hrsh7th/nvim-cmp",
         dependencies = {
             "hrsh7th/cmp-path",
             "hrsh7th/cmp-nvim-lsp",
@@ -41,9 +42,9 @@ return {
                             fallback()
                         end
                     end, {
-                            "i",
-                            "s",
-                        }),
+                        "i",
+                        "s",
+                    }),
 
                     ["<S-Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
@@ -54,9 +55,9 @@ return {
                             fallback()
                         end
                     end, {
-                            "i",
-                            "s",
-                        }),
+                        "i",
+                        "s",
+                    }),
                 }),
 
                 sources = cmp.config.sources(
