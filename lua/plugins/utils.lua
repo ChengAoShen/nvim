@@ -172,6 +172,8 @@ return {
             require('code_runner').setup({
                 filetype = {
                     python = "python3 -u",
+                    c = "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+                    cpp = "cd $dir && g++ $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
                 },
             })
             vim.keymap.set("n", "<leader>rc", "<cmd>RunCode<CR>")
