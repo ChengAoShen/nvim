@@ -193,4 +193,17 @@ return {
             require('symbols-outline').setup()
         end
     },
+
+    {
+        "sidebar-nvim/sidebar.nvim",
+        event = "VeryLazy",
+        config = function()
+            require("sidebar-nvim").setup({
+                open = false,
+                -- bind = {["<C-M>"] = function () require("sidebar-nvim").toggle() end},
+                sections = { "todos", "symbols", "diagnostics", "git" },
+                vim.keymap.set("n", "<C-M>", "<cmd>SidebarNvimToggle<CR>")
+            })
+        end
+    }
 }
