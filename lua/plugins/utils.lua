@@ -205,5 +205,72 @@ return {
                 vim.keymap.set("n", "<C-M>", "<cmd>SidebarNvimToggle<CR>")
             })
         end
+    },
+    {
+        "rcarriga/nvim-notify",
+        lazy = true,
+        event = "VeryLazy",
+        config = function()
+            local notify = require("notify")
+            notify.setup({
+                -- -- "fade", "slide", "fade_in_slide_out", "static"
+                -- stages = "static",
+                -- on_open = nil,
+                -- on_close = nil,
+                timeout = 2000,
+                -- fps = 1,
+                -- render = "default",
+                -- background_colour = "Normal",
+                max_width = math.floor(vim.api.nvim_win_get_width(0) / 3),
+                max_height = math.floor(vim.api.nvim_win_get_height(0) / 4),
+                -- level = "TRACE",
+            })
+
+            vim.notify = notify
+        end,
+    },
+
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "rcarriga/nvim-notify",
+        },
+        config = function()
+            require("noice").setup({
+                lsp = {
+                    override = {
+                        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                        ["vim.lsp.util.stylize_markdown"] = true,
+                        ["cmp.entry.get_documentation"] = true,
+                    },
+                },
+                presets = {
+                    bottom_search = true,         -- use a classic bottom cmdline for search
+                    command_palette = true,       -- position the cmdline and popupmenu together
+                    long_message_to_split = true, -- long messages will be sent to a split
+                    inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+                    lsp_doc_border = false,       -- add a border to hover docs and signature help
+                },
+            })
+        end
+    },
+
+    {
+        'rmagatti/goto-preview',
+        event = "VeryLazy",
+        config = function()
+            require('goto-preview').setup({
+                default_mappings = true
+            })
+        end
+    },
+
+    {
+        'gen740/SmoothCursor.nvim',
+        config = function()
+            require('smoothcursor').setup()
+        end
     }
 }

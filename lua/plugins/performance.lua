@@ -73,9 +73,19 @@ return {
 
     {
         "folke/todo-comments.nvim",
+        event = "VeryLazy",
         dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
             require("todo-comments").setup()
         end
     },
+
+    {
+        "hiphish/rainbow-delimiters.nvim",
+        event  = "VeryLazy",
+        config = function()
+            require("rainbow-delimiters.setup").setup({})
+        end
+
+    }
 }

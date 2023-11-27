@@ -15,7 +15,7 @@ return {
                 }
             })
             require("mason-lspconfig").setup({
-                ensure_installed = { "pyright", "lua_ls", "clangd", "texlab" },
+                ensure_installed = { "pyright", "lua_ls", "clangd", "texlab" ,"matlab_ls"},
             })
         end
     },
@@ -37,6 +37,10 @@ return {
             require("lspconfig").clangd.setup({})
 
             require("lspconfig").texlab.setup({})
+
+            require("lspconfig").matlab_ls.setup({
+                single_file_support = true
+            })
 
             require("lspconfig").lua_ls.setup({
                 settings = {
@@ -72,6 +76,7 @@ return {
             })
         end,
     },
+
     {
         "jay-babu/mason-null-ls.nvim",
         event = { "BufReadPre", "BufNewFile", "VeryLazy" },
