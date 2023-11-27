@@ -20,7 +20,7 @@ opt.autoread = true
 opt.swapfile = false
 opt.backup = false
 opt.updatetime = 50
-opt.wrap = true
+opt.wrap = false
 opt.linebreak = true
 opt.textwidth = 80
 opt.mouse = "a"
@@ -31,6 +31,7 @@ opt.splitright = true
 opt.splitbelow = true
 opt.exrc = true
 
+vim.wo.colorcolumn = "80"
 vim.o.guifont = "Fira Code:h18"
 -- vim.o.guifont = "Monaspace Radon:h20"
 -- vim.g.neovide_transparency = 0.9

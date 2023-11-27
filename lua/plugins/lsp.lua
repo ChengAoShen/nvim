@@ -15,9 +15,32 @@ return {
                 }
             })
             require("mason-lspconfig").setup({
-                ensure_installed = { "pyright", "lua_ls", "clangd", "texlab" ,"matlab_ls"},
+                ensure_installed = { "pyright", "lua_ls", "clangd", "texlab",
+                    "matlab_ls", "ast_grep" },
             })
         end
+    },
+
+    {
+        "jay-babu/mason-null-ls.nvim",
+        event = { "BufReadPre", "BufNewFile", "VeryLazy" },
+        dependencies = {
+            "williamboman/mason.nvim",
+            "jose-elias-alvarez/null-ls.nvim",
+        },
+        config = function()
+            require("mason-null-ls").setup({
+                ensure_installed = { "black", "isort" },
+            })
+
+            local null_ls = require("null-ls")
+            require("null-ls").setup({
+                sources = {
+                    null_ls.builtins.formatting.black,
+                    null_ls.builtins.formatting.isort,
+                },
+            })
+        end,
     },
 
     {
@@ -34,14 +57,12 @@ return {
                     },
                 }
             })
+            require("lspconfig").ast_grep.setup({})
             require("lspconfig").clangd.setup({})
-
             require("lspconfig").texlab.setup({})
-
             require("lspconfig").matlab_ls.setup({
                 single_file_support = true
             })
-
             require("lspconfig").lua_ls.setup({
                 settings = {
                     Lua = {
@@ -77,24 +98,4 @@ return {
         end,
     },
 
-    {
-        "jay-babu/mason-null-ls.nvim",
-        event = { "BufReadPre", "BufNewFile", "VeryLazy" },
-        dependencies = {
-            "williamboman/mason.nvim",
-            "jose-elias-alvarez/null-ls.nvim",
-        },
-        config = function()
-            require("mason-null-ls").setup({
-                ensure_installed = { "black" }
-            })
-
-            local null_ls = require("null-ls")
-            require("null-ls").setup({
-                sources = {
-                    null_ls.builtins.formatting.black,
-                },
-            })
-        end,
-    }
 }

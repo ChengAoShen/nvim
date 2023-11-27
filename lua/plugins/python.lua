@@ -17,7 +17,7 @@ return {
 
             })
         end,
-        event = "VeryLazy", -- Optional: needed only if you want to type `:VenvSelect` without a keymapping
+        event = "VeryLazy",
         keys = { { "<leader>vs", "<cmd>VenvSelect<cr>" }, }
     },
 
@@ -36,6 +36,7 @@ return {
             require("notebook-navigator").setup()
         end,
     },
+
     {
         "hkupty/iron.nvim",
         config = function()

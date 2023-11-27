@@ -87,5 +87,26 @@ return {
             require("rainbow-delimiters.setup").setup({})
         end
 
-    }
+    },
+
+    {
+        "kevinhwang91/nvim-hlslens",
+        config = function()
+            -- require('hlslens').setup() is not required
+            require("scrollbar.handlers.search").setup({
+                -- hlslens config overrides
+            })
+        end,
+    },
+
+    {
+        "petertriho/nvim-scrollbar",
+        event = "VeryLazy",
+        config = function()
+            require("scrollbar").setup({})
+        end
+
+    },
+
+
 }
