@@ -273,5 +273,16 @@ return {
         config = function()
             require('smoothcursor').setup()
         end
+    },
+
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        config = true,
+    },
+
+    {
+        "ellisonleao/glow.nvim",
+        config = true,
     }
 }
