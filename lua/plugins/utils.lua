@@ -51,9 +51,7 @@ return {
 
     {
         'echasnovski/mini.ai',
-        config = function()
-            require("mini.ai").setup()
-        end
+        config = true
     },
 
     {
@@ -278,11 +276,12 @@ return {
     {
         "folke/which-key.nvim",
         event = "VeryLazy",
-        config = true,
+        config = true
     },
 
     {
         "ellisonleao/glow.nvim",
         config = true,
+        cmd = "Glow"
     }
 }

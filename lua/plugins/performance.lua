@@ -1,6 +1,8 @@
 return {
     {
         "folke/tokyonight.nvim",
+        lazy = false,
+        priority = 1000,
         config = function()
             vim.cmd [[colorscheme tokyonight-storm]]
         end
@@ -9,6 +11,7 @@ return {
     {
         "nvim-lualine/lualine.nvim",
         dependencies = "nvim-tree/nvim-web-devicons",
+        lazy = false,
         config = function()
             require("lualine").setup({ theme = 'tokyonight-stom' })
         end
@@ -16,10 +19,7 @@ return {
 
     {
         "akinsho/bufferline.nvim",
-        dependencies = "nvim-tree/nvim-web-devicons",
-        config = function()
-            require("bufferline").setup()
-        end
+        config = true
     },
 
     {
@@ -43,7 +43,6 @@ return {
 
     {
         'goolord/alpha-nvim',
-        dependencies = { 'nvim-tree/nvim-web-devicons' },
         config = function()
             local dashboard = require("alpha.themes.dashboard")
             dashboard.section.header.val = {
@@ -75,9 +74,7 @@ return {
         "folke/todo-comments.nvim",
         event = "VeryLazy",
         dependencies = { "nvim-lua/plenary.nvim" },
-        config = function()
-            require("todo-comments").setup()
-        end
+        config = true
     },
 
     {
