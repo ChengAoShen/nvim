@@ -32,7 +32,7 @@ opt.splitbelow = true
 opt.exrc = true
 
 vim.wo.colorcolumn = "80"
-vim.o.guifont = "Fira Code:h18"
+vim.o.guifont = "FiraCode Nerd Font Mono:h18"
 -- vim.o.guifont = "Monaspace Radon:h20"
 -- vim.g.neovide_transparency = 0.9
 
