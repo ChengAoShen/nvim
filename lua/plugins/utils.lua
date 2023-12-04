@@ -169,9 +169,10 @@ return {
         config = function()
             require('code_runner').setup({
                 filetype = {
-                    python = "python3 -u",
+                    python = "cd $dir && ipython -i $fileName",
                     c = "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
                     cpp = "cd $dir && g++ $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+                    rust = "cd $dir && cargo run",
                 },
             })
             vim.keymap.set("n", "<leader>rc", "<cmd>RunCode<CR>")
@@ -267,7 +268,7 @@ return {
     },
 
     {
-        'gen740/SmoothCursor.nvim',
+        "gen740/SmoothCursor.nvim",
         config = function()
             require('smoothcursor').setup()
         end
@@ -283,5 +284,6 @@ return {
         "ellisonleao/glow.nvim",
         config = true,
         cmd = "Glow"
-    }
+    },
+
 }

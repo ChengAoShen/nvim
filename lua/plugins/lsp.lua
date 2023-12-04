@@ -16,7 +16,7 @@ return {
             })
             require("mason-lspconfig").setup({
                 ensure_installed = { "pyright", "lua_ls", "clangd", "texlab",
-                    "matlab_ls", "ast_grep" },
+                    "ast_grep", "rust_analyzer" },
             })
         end
     },
@@ -57,12 +57,10 @@ return {
                     },
                 }
             })
+            require("lspconfig").rust_analyzer.setup({})
             require("lspconfig").ast_grep.setup({})
             require("lspconfig").clangd.setup({})
             require("lspconfig").texlab.setup({})
-            require("lspconfig").matlab_ls.setup({
-                single_file_support = true
-            })
             require("lspconfig").lua_ls.setup({
                 settings = {
                     Lua = {
