@@ -128,7 +128,8 @@ return {
         build = ":TSUpdate",
         config = function()
             require("nvim-treesitter.configs").setup({
-                ensure_installed = { "python", "rust", "cpp", "c", "lua" },
+                ensure_installed = { "python", "rust", "cpp", "c",
+                    "lua", "json", "javascript", "html" },
                 highlight = { enable = true, disable = { "latex" }, },
                 indent = { enable = true, },
             })

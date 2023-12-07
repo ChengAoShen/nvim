@@ -1,5 +1,28 @@
+local on_attach = function(client, bufnr)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+    -- Mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local bufopts = { noremap = true, silent = true, buffer = bufnr }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+    vim.keymap.set('n', '<space>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, bufopts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+    vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+    vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+end
+
 return {
-    -- lsp --
     {
         "williamboman/mason.nvim",
         dependencies = "williamboman/mason-lspconfig.nvim",
@@ -15,32 +38,10 @@ return {
                 }
             })
             require("mason-lspconfig").setup({
-                ensure_installed = { "pyright", "lua_ls", "clangd", "texlab",
-                    "ast_grep", "rust_analyzer" },
+                ensure_installed = { "lua_ls", "clangd", "texlab",
+                    "rust_analyzer", "ruff_lsp", "pyright" },
             })
         end
-    },
-
-    {
-        "jay-babu/mason-null-ls.nvim",
-        event = { "BufReadPre", "BufNewFile", "VeryLazy" },
-        dependencies = {
-            "williamboman/mason.nvim",
-            "jose-elias-alvarez/null-ls.nvim",
-        },
-        config = function()
-            require("mason-null-ls").setup({
-                ensure_installed = { "black", "isort" },
-            })
-
-            local null_ls = require("null-ls")
-            require("null-ls").setup({
-                sources = {
-                    null_ls.builtins.formatting.black,
-                    null_ls.builtins.formatting.isort,
-                },
-            })
-        end,
     },
 
     {
@@ -49,6 +50,7 @@ return {
 
         config = function()
             require("lspconfig").pyright.setup({
+                on_attach = on_attach,
                 settings = {
                     python = {
                         analysis = {
@@ -57,43 +59,27 @@ return {
                     },
                 }
             })
-            require("lspconfig").rust_analyzer.setup({})
-            require("lspconfig").ast_grep.setup({})
-            require("lspconfig").clangd.setup({})
-            require("lspconfig").texlab.setup({})
+            require 'lspconfig'.ruff_lsp.setup {
+                on_attach = on_attach
+            }
+
+            require("lspconfig").rust_analyzer.setup({
+                on_attach = on_attach,
+            })
+            require("lspconfig").clangd.setup({
+                on_attach = on_attach,
+            })
+            require("lspconfig").texlab.setup({
+                on_attach = on_attach,
+            })
             require("lspconfig").lua_ls.setup({
+                on_attach = on_attach,
                 settings = {
                     Lua = {
                         diagnostics = { globals = { 'vim' }, },
                     },
                 },
             })
-
-            vim.api.nvim_create_autocmd('LspAttach', {
-                group = vim.api.nvim_create_augroup('UserLspConfig', {}),
-                callback = function(ev)
-                    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-                    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-                    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-                    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-                    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-                    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
-                    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
-                    vim.keymap.set('n', '<space>wl', function()
-                        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-                    end, opts)
-                    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
-                    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-                    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
-                    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-                    vim.keymap.set('n', '<space>f', function()
-                        vim.lsp.buf.format { async = true }
-                    end, opts)
-                end,
-            })
         end,
     },
-
 }
