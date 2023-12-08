@@ -22,7 +22,7 @@ opt.backup = false
 opt.updatetime = 50
 opt.wrap = false
 opt.linebreak = true
-opt.textwidth = 80
+opt.textwidth = 88
 opt.mouse = "a"
 opt.undofile = true
 opt.undodir = vim.fn.expand("$HOME/.local/share/nvim/undo")
@@ -31,7 +31,7 @@ opt.splitright = true
 opt.splitbelow = true
 opt.exrc = true
 
-vim.wo.colorcolumn = "80"
+vim.wo.colorcolumn = "88"
 vim.o.guifont = "FiraCode Nerd Font Mono:h18"
 -- vim.o.guifont = "Monaspace Radon:h20"
 -- vim.g.neovide_transparency = 0.9

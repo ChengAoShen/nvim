@@ -60,7 +60,7 @@ return {
                 }
             })
             require 'lspconfig'.ruff_lsp.setup {
-                on_attach = on_attach
+                on_attach = on_attach,
             }
 
             require("lspconfig").rust_analyzer.setup({
