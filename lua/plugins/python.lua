@@ -39,6 +39,7 @@ return {
 
     {
         "hkupty/iron.nvim",
+        event = "VeryLazy",
         config = function()
             require("iron.core").setup({
                 config = {
