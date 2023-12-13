@@ -39,7 +39,7 @@ return {
             })
             require("mason-lspconfig").setup({
                 ensure_installed = { "lua_ls", "clangd", "texlab",
-                    "rust_analyzer", "ruff_lsp", "pyright" },
+                    "rust_analyzer", "ruff_lsp", "pyright", "jsonls" },
             })
         end
     },
@@ -59,7 +59,7 @@ return {
                     },
                 }
             })
-            require 'lspconfig'.ruff_lsp.setup {
+            require("lspconfig").ruff_lsp.setup {
                 on_attach = on_attach,
             }
 
@@ -70,6 +70,9 @@ return {
                 on_attach = on_attach,
             })
             require("lspconfig").texlab.setup({
+                on_attach = on_attach,
+            })
+            require("lspconfig").jsonls.setup({
                 on_attach = on_attach,
             })
             require("lspconfig").lua_ls.setup({
