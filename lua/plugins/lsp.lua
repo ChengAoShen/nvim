@@ -38,8 +38,10 @@ return {
                 }
             })
             require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls", "clangd", "texlab",
-                    "rust_analyzer", "ruff_lsp", "pyright", "jsonls" },
+                ensure_installed = { "pyright", "ruff_lsp",
+                    "rust_analyzer", "clangd",
+                    "texlab", "lua_ls",
+                    "tsserver", "jsonls" },
             })
         end
     },
@@ -47,7 +49,6 @@ return {
     {
         "neovim/nvim-lspconfig",
         event = "VeryLazy",
-
         config = function()
             require("lspconfig").pyright.setup({
                 on_attach = on_attach,
@@ -72,9 +73,6 @@ return {
             require("lspconfig").texlab.setup({
                 on_attach = on_attach,
             })
-            require("lspconfig").jsonls.setup({
-                on_attach = on_attach,
-            })
             require("lspconfig").lua_ls.setup({
                 on_attach = on_attach,
                 settings = {
@@ -82,6 +80,12 @@ return {
                         diagnostics = { globals = { 'vim' }, },
                     },
                 },
+            })
+            require("lspconfig").jsonls.setup({
+                on_attach = on_attach,
+            })
+            require("lspconfig").tsserver.setup({
+                on_attach = on_attach,
             })
         end,
     },
