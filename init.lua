@@ -1,3 +1,3 @@
-require("config.basic")
-require("config.keymaps")
-require("lazy").setup("plugins")
+require("basics.configs")
+require("basics.keymaps")
+require("basics.scipts")
