@@ -1,4 +1,6 @@
 return {
+    "nvim-tree/nvim-web-devicons",
+
     {
         "folke/tokyonight.nvim",
         lazy = false,
@@ -10,27 +12,23 @@ return {
 
     {
         "nvim-lualine/lualine.nvim",
-        dependencies = "nvim-tree/nvim-web-devicons",
-        lazy = false,
-        config = function()
-            require("lualine").setup({ theme = 'tokyonight-stom' })
-        end
+        event = "VeryLazy",
+        config = true
     },
 
     {
         "akinsho/bufferline.nvim",
+        event = "VeryLazy",
         config = true
     },
 
     {
         "utilyre/barbecue.nvim",
         event = "VeryLazy",
-        dependencies = {
-            "SmiteshP/nvim-navic",
-            "nvim-tree/nvim-web-devicons", },
-        config = function()
-            require("barbecue").setup({ theme = 'tokyonight-stom' })
-        end
+        dependencies = "SmiteshP/nvim-navic",
+        opts = {
+            theme = "tokyonight-storm"
+        }
     },
 
     {
@@ -90,9 +88,7 @@ return {
         "kevinhwang91/nvim-hlslens",
         event = "VeryLazy",
         config = function()
-            -- require('hlslens').setup() is not required
             require("scrollbar.handlers.search").setup({
-                -- hlslens config overrides
             })
         end,
     },
@@ -100,11 +96,7 @@ return {
     {
         "petertriho/nvim-scrollbar",
         event = "VeryLazy",
-        config = function()
-            require("scrollbar").setup({})
-        end
-
+        config = true
     },
-
 
 }

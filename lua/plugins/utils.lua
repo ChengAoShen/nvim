@@ -1,6 +1,7 @@
 return {
     {
         "github/copilot.vim",
+        event = "VeryLazy",
         config = function()
             vim.g.copilot_assume_mapped = true
         end,
@@ -22,15 +23,14 @@ return {
                         custom = {
                             ".git",
                             ".pytest_cache",
-                            ".vim",
                             ".vscode",
                             ".cache",
                             ".DS_Store",
                             "__pycache__", }
                     },
+
                 })
             vim.keymap.set("n", "<C-N>", "<cmd>NvimTreeToggle<CR>")
-            vim.keymap.set("n", "tr", "<cmd>NvimTreeToggle<CR>")
             vim.g.loaded_netrw = 1
             vim.g.loaded_newrwPlugin = 1
         end
@@ -50,29 +50,26 @@ return {
 
     {
         'echasnovski/mini.ai',
+        event = "BufEnter",
         config = true
     },
 
     {
         "echasnovski/mini.comment",
-        config = function()
-            require("mini.comment").setup()
-        end
+        event = "VeryLazy",
+        config = true
     },
 
     {
         'windwp/nvim-autopairs',
         event = "InsertEnter",
-        config = function()
-            require('nvim-autopairs').setup()
-        end
+        config = true
     },
 
     {
         "lewis6991/gitsigns.nvim",
-        config = function()
-            require('gitsigns').setup()
-        end
+        event = "BufEnter",
+        config = true
     },
 
     {
@@ -116,9 +113,8 @@ return {
 
     {
         "kylechui/nvim-surround",
-        config = function()
-            require("nvim-surround").setup()
-        end
+        event = "InsertEnter",
+        config = true
     },
 
     {
