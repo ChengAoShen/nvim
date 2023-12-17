@@ -1,5 +1,5 @@
 {
-  "LuaSnip": { "branch": "master", "commit": "6a001360cea89df50f7c5cc8c7a75e6a21f1ef5c" },
+  "LuaSnip": { "branch": "master", "commit": "57c9f5c31b3d712376c704673eac8e948c82e9c1" },
   "Navigator.nvim": { "branch": "master", "commit": "91d86506ac2a039504d5205d32a1d4bc7aa57072" },
   "NotebookNavigator.nvim": { "branch": "main", "commit": "13e98aaf2e23a88f8ce81316ac959fdba83bd810" },
   "SmoothCursor.nvim": { "branch": "main", "commit": "cc8780622a7b7c328f774762fa2d97d9f83be828" },
@@ -46,7 +46,7 @@
   "nvim-web-devicons": { "branch": "master", "commit": "a1425903ab52a0a0460622519e827f224e5b4fee" },
   "plenary.nvim": { "branch": "master", "commit": "55d9fe89e33efd26f532ef20223e5f9430c8b0c0" },
   "promise-async": { "branch": "main", "commit": "94f6f03c6c1e2aab551aacdf0c1e597a7269abb6" },
-  "rainbow-delimiters.nvim": { "branch": "master", "commit": "bc42902d3e4ce22f1a4e25b2f42b1e9f3a415672" },
+  "rainbow-delimiters.nvim": { "branch": "master", "commit": "b510fd445b6ee0b621e910e4b3e123e48d6bb436" },
   "sidebar.nvim": { "branch": "main", "commit": "990ce5f562c9125283ccac5473235b1a56fea6dc" },
   "symbols-outline.nvim": { "branch": "master", "commit": "512791925d57a61c545bc303356e8a8f7869763c" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "6c921ca12321edaa773e324ef64ea301a1d0da62" },
