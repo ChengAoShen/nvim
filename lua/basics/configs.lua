@@ -31,3 +31,15 @@ opt.exrc = true
 
 vim.wo.colorcolumn = "88"
 vim.o.guifont = "FiraCode Nerd Font Mono:h18"
+
+-- 设置语言全局变量
+vim.g.language = {
+    python = true,
+    rust = true,
+    c= true,
+    tex = true,
+    lua = true,
+    typescript = true,
+    json = true,
+    swift = true,
+}

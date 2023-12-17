@@ -13,40 +13,77 @@ return {
                     }
                 }
             })
-            require("mason-lspconfig").setup({
-                ensure_installed = { "pyright", "ruff_lsp",
-                    "rust_analyzer", "clangd",
-                    "texlab", "lua_ls",
-                    "tsserver", "jsonls" },
-            })
+            local ensure_installed_table = {}
+            if vim.g.language.python then
+                table.insert(ensure_installed_table, "pyright")
+                table.insert(ensure_installed_table, "ruff_lsp")
+            end
+            if vim.g.language.rust then
+                table.insert(ensure_installed_table,  "rust_analyzer" )
+            end
+            if vim.g.language.c then
+                table.insert(ensure_installed_table, "clangd" )
+            end
+            if vim.g.language.tex then
+                table.insert(ensure_installed_table, "texlab" )
+            end
+            if vim.g.language.lua then
+                table.insert(ensure_installed_table, "lua_ls" )
+            end
+            if vim.g.language.typescript then
+                table.insert(ensure_installed_table, "tsserver" )
+            end
+            if vim.g.language.json then
+                table.insert(ensure_installed_table, "jsonls" )
+            end
+
+            require("mason-lspconfig").setup({ ensure_installed = ensure_installed_table })
         end
     },
 
     {
         "neovim/nvim-lspconfig",
         config = function()
-            require("lspconfig").pyright.setup({
-                settings = {
-                    python = {
-                        analysis = {
-                            typeCheckingMode = "basic",
-                        }
+            if vim.g.language.python then
+                require("lspconfig").pyright.setup({
+                    settings = {
+                        python = {
+                            analysis = {
+                                typeCheckingMode = "basic",
+                            }
+                        },
+                    }
+                })
+                require("lspconfig").ruff_lsp.setup({})
+            end
+            if vim.g.language.rust then
+                require("lspconfig").rust_analyzer.setup({})
+            end
+            if vim.g.language.c then
+                require("lspconfig").clangd.setup({})
+            end
+            if vim.g.language.tex then
+                require("lspconfig").texlab.setup({})
+            end
+            if vim.g.language.lua then
+                require("lspconfig").lua_ls.setup({
+                    settings = {
+                        Lua = {
+                            diagnostics = { globals = { 'vim' }, },
+                        },
                     },
-                }
-            })
-            require("lspconfig").ruff_lsp.setup({})
-            require("lspconfig").rust_analyzer.setup({})
-            require("lspconfig").clangd.setup({})
-            require("lspconfig").texlab.setup({})
-            require("lspconfig").lua_ls.setup({
-                settings = {
-                    Lua = {
-                        diagnostics = { globals = { 'vim' }, },
-                    },
-                },
-            })
-            require("lspconfig").jsonls.setup({})
-            require("lspconfig").tsserver.setup({})
+                })
+            end
+            if vim.g.language.typescript then
+                require("lspconfig").tsserver.setup({})
+            end
+            if vim.g.language.json then
+                require("lspconfig").jsonls.setup({})
+            end
+            if vim.g.language.swift then
+                require("lspconfig").sourcekit.setup({})
+            end
+
 
             vim.api.nvim_create_autocmd('LspAttach', {
                 group = vim.api.nvim_create_augroup('UserLspConfig', {}),
