@@ -1,6 +1,4 @@
 return {
-    "nvim-tree/nvim-web-devicons",
-
     {
         "folke/tokyonight.nvim",
         lazy = false,
@@ -8,6 +6,12 @@ return {
         config = function()
             vim.cmd [[colorscheme tokyonight-storm]]
         end
+    },
+
+    {
+        "nvim-tree/nvim-web-devicons",
+        event = "VeryLazy",
+        config = true
     },
 
     {
