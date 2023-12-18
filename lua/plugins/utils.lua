@@ -38,6 +38,7 @@ return {
 
     {
         'numToStr/Navigator.nvim',
+        event = "VeryLazy",
         config = function()
             require('Navigator').setup()
             vim.keymap.set({ 'n', 't' }, '<leader>h', '<CMD>NavigatorLeft<CR>')
@@ -50,7 +51,7 @@ return {
 
     {
         'echasnovski/mini.ai',
-        event = "BufEnter",
+        event = "VeryLazy",
         config = true
     },
 
@@ -68,7 +69,7 @@ return {
 
     {
         "lewis6991/gitsigns.nvim",
-        event = "BufEnter",
+        event = "VeryLazy",
         config = true
     },
 
@@ -148,10 +149,11 @@ return {
 
     {
         "rhysd/accelerated-jk",
-        config = function()
-            vim.keymap.set("n", "j", "<Plug>(accelerated_jk_gj)")
-            vim.keymap.set("n", "k", "<Plug>(accelerated_jk_gk)")
-        end
+        lazy = true,
+        keys = {
+            { "j", mode = "n", "<Plug>(accelerated_jk_gj)", desc = "Accelerated j" },
+            { "k", mode = "n", "<Plug>(accelerated_jk_gk)", desc = "Accelerated k" },
+        },
     },
 
     {
@@ -160,20 +162,24 @@ return {
             require("symbols-outline").setup()
         end
     },
+
     {
         "CRAG666/code_runner.nvim",
-        config = function()
-            require('code_runner').setup({
-                filetype = {
-                    python = "cd $dir && ipython -i $fileName",
-                    c = "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
-                    cpp = "cd $dir && g++ $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
-                    rust = "cd $dir && cargo run",
-                },
-            })
-            vim.keymap.set("n", "<leader>rc", "<cmd>RunCode<CR>")
-        end
+        lazy = true,
+        opts = {
+            filetype = {
+                python = "cd $dir && ipython -i $fileName",
+                c = "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+                cpp = "cd $dir && g++ $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+                rust = "cd $dir && cargo run",
+                lua = "cd $dir && lua $fileName",
+            },
+        },
+        keys = {
+            { "<leader>rc", mode = "n", "<cmd>RunCode<CR>", desc = "Run Code" },
+        },
     },
+
     {
         "sindrets/diffview.nvim",
         event = "VeryLazy",
@@ -256,18 +262,16 @@ return {
     {
         'rmagatti/goto-preview',
         event = "VeryLazy",
-        config = function()
-            require('goto-preview').setup({
-                default_mappings = true
-            })
-        end
+        opts = {
+            default_mappings = true
+        },
+        config = true
     },
 
     {
         "gen740/SmoothCursor.nvim",
-        config = function()
-            require('smoothcursor').setup()
-        end
+        event = "VeryLazy",
+        config = true
     },
 
     {
