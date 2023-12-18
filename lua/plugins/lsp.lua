@@ -51,7 +51,7 @@ return {
 
     {
         "neovim/nvim-lspconfig",
-        event = "BufEnter",
+        event = "VeryLazy",
         config = function()
             if vim.g.language.python then
                 require("lspconfig").pyright.setup({
