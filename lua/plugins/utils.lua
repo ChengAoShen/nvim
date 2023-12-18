@@ -170,7 +170,6 @@ return {
     {
         "rhysd/accelerated-jk",
         lazy = true,
-        config = true,
         keys = {
             { "j", mode = "n", "<Plug>(accelerated_jk_gj)", desc = "Accelerated j" },
             { "k", mode = "n", "<Plug>(accelerated_jk_gk)", desc = "Accelerated k" },
