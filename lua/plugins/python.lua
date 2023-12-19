@@ -17,12 +17,16 @@ if vim.g.language.python then
             ft = { 'python' },
             config = function()
                 require("venv-selector").setup({
+                    path = "/opt/homebrew/Caskroom/miniconda",
+                    parents = 0,
                     anaconda_base_path = "/opt/homebrew/Caskroom/miniconda/base",
                     anaconda_envs_path = "/opt/homebrew/Caskroom/miniconda/base/envs",
-
                 })
             end,
-            keys = { { "<leader>vs", "<cmd>VenvSelect<cr>" }, }
+            keys = {
+                { "<leader>vs", "<cmd>VenvSelect<cr>" },
+                { '<leader>vc', '<cmd>VenvSelectCached<cr>' }
+            }
         },
 
         {

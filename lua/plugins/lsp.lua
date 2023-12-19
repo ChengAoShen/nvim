@@ -23,26 +23,26 @@ return {
             })
             local ensure_installed_table = {}
             if vim.g.language.python then
-                table.insert(ensure_installed_table, "pyright")
+                table.insert(ensure_installed_table, "pylsp")
                 table.insert(ensure_installed_table, "ruff_lsp")
             end
             if vim.g.language.rust then
-                table.insert(ensure_installed_table,  "rust_analyzer" )
+                table.insert(ensure_installed_table, "rust_analyzer")
             end
             if vim.g.language.c then
-                table.insert(ensure_installed_table, "clangd" )
+                table.insert(ensure_installed_table, "clangd")
             end
             if vim.g.language.tex then
-                table.insert(ensure_installed_table, "texlab" )
+                table.insert(ensure_installed_table, "texlab")
             end
             if vim.g.language.lua then
-                table.insert(ensure_installed_table, "lua_ls" )
+                table.insert(ensure_installed_table, "lua_ls")
             end
             if vim.g.language.typescript then
-                table.insert(ensure_installed_table, "tsserver" )
+                table.insert(ensure_installed_table, "tsserver")
             end
             if vim.g.language.json then
-                table.insert(ensure_installed_table, "jsonls" )
+                table.insert(ensure_installed_table, "jsonls")
             end
 
             require("mason-lspconfig").setup({ ensure_installed = ensure_installed_table })
@@ -54,14 +54,18 @@ return {
         event = "VeryLazy",
         config = function()
             if vim.g.language.python then
-                require("lspconfig").pyright.setup({
+                require("lspconfig").pylsp.setup({
                     settings = {
-                        python = {
-                            analysis = {
-                                typeCheckingMode = "basic",
-                            }
+                        pylsp = {
+                            plugins = {
+                                autopep8 = { enabled = false },
+                                yapf = { enabled = false },
+                                pydocstyle = { convention = "google" },
+                                jedi_completion = { fuzzy = true },
+                            },
                         },
-                    }
+                    },
+
                 })
                 require("lspconfig").ruff_lsp.setup({})
             end
