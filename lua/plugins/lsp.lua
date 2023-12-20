@@ -23,8 +23,8 @@ return {
             })
             local ensure_installed_table = {}
             if vim.g.language.python then
-                table.insert(ensure_installed_table, "pylsp")
                 table.insert(ensure_installed_table, "ruff_lsp")
+                table.insert(ensure_installed_table, "pylsp")
             end
             if vim.g.language.rust then
                 table.insert(ensure_installed_table, "rust_analyzer")
@@ -54,20 +54,27 @@ return {
         event = "VeryLazy",
         config = function()
             if vim.g.language.python then
+                require("lspconfig").ruff_lsp.setup({})
                 require("lspconfig").pylsp.setup({
                     settings = {
                         pylsp = {
+                            configurationSources = { "flake8", "pycodestyle" },
                             plugins = {
+                                -- disable formatting plugins, use ruff_lsp instead
                                 autopep8 = { enabled = false },
                                 yapf = { enabled = false },
-                                pydocstyle = { convention = "google" },
-                                jedi_completion = { fuzzy = true },
+                                -- settings
+                                flake8 = { enabled = true, maxLineLength = 88 },
+                                jedi = { enabled = true },
+                                jedi_completion = { enabled = true, fuzzy = true },
+                                pycodestyle = { enabled = true, maxLineLength = 88 },
+                                pydocstyle = { enabled = true, convention = "google" },
+                                rope_autoimport = { enabled = true },
                             },
                         },
                     },
 
                 })
-                require("lspconfig").ruff_lsp.setup({})
             end
             if vim.g.language.rust then
                 require("lspconfig").rust_analyzer.setup({})
