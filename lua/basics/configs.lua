@@ -28,6 +28,7 @@ opt.clipboard:append("unnamedplus")
 opt.splitright = true
 opt.splitbelow = true
 opt.exrc = true
+opt.cursorline=true
 
 vim.wo.colorcolumn = "88"
 vim.o.guifont = "FiraCode Nerd Font Mono:h18"

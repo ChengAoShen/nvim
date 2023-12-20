@@ -122,7 +122,7 @@ return {
         config = function()
             require("nvim-treesitter.configs").setup({
                 ensure_installed = { "python", "rust", "cpp", "c",
-                    "lua", "json", "javascript", "html" },
+                    "lua", "json", "javascript", "html" ,"toml"},
                 highlight = { enable = true, disable = { "latex" }, },
                 indent = { enable = true, },
             })
