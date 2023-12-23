@@ -122,7 +122,7 @@ return {
         config = function()
             require("nvim-treesitter.configs").setup({
                 ensure_installed = { "python", "rust", "cpp", "c",
-                    "lua", "json", "javascript", "html" ,"toml"},
+                    "lua", "json", "javascript", "html", "toml" },
                 highlight = { enable = true, disable = { "latex" }, },
                 indent = { enable = true, },
             })
@@ -131,7 +131,7 @@ return {
 
     {
         "folke/flash.nvim",
-        lazy=true,
+        lazy = true,
         config = true,
         keys = {
             {
