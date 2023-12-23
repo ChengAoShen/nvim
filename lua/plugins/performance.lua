@@ -1,10 +1,23 @@
 return {
+    -- {
+    --     "folke/tokyonight.nvim",
+    --     lazy = false,
+    --     priority = 1000,
+    --     config = function()
+    --         vim.cmd [[colorscheme tokyonight-storm]]
+    --     end
+    -- },
     {
-        "folke/tokyonight.nvim",
+        "navarasu/onedark.nvim",
         lazy = false,
         priority = 1000,
         config = function()
-            vim.cmd [[colorscheme tokyonight-storm]]
+            -- Lua
+            require('onedark').setup({
+                style = 'darker',
+                highlights = {}
+            })
+            require('onedark').load()
         end
     },
 
@@ -92,8 +105,7 @@ return {
         "kevinhwang91/nvim-hlslens",
         event = "VeryLazy",
         config = function()
-            require("scrollbar.handlers.search").setup({
-            })
+            require("scrollbar.handlers.search").setup({})
         end,
     },
 
