@@ -28,6 +28,7 @@ return {
             end
             if vim.g.language.rust then
                 table.insert(ensure_installed_table, "rust_analyzer")
+                table.insert(ensure_installed_table, "taplo")
             end
             if vim.g.language.c then
                 table.insert(ensure_installed_table, "clangd")
@@ -53,9 +54,10 @@ return {
         "neovim/nvim-lspconfig",
         event = "VeryLazy",
         config = function()
+            local lspconfig = require("lspconfig")
             if vim.g.language.python then
-                require("lspconfig").ruff_lsp.setup({})
-                require("lspconfig").pyright.setup({
+                lspconfig.ruff_lsp.setup({})
+                lspconfig.pyright.setup({
                     settings = {
                         python = {
                             analysis = {
@@ -66,16 +68,17 @@ return {
                 })
             end
             if vim.g.language.rust then
-                require("lspconfig").rust_analyzer.setup({})
+                lspconfig.rust_analyzer.setup({})
+                lspconfig.taplo.setup({})
             end
             if vim.g.language.c then
-                require("lspconfig").clangd.setup({})
+                lspconfig.clangd.setup({})
             end
             if vim.g.language.tex then
-                require("lspconfig").texlab.setup({})
+                lspconfig.texlab.setup({})
             end
             if vim.g.language.lua then
-                require("lspconfig").lua_ls.setup({
+                lspconfig.lua_ls.setup({
                     settings = {
                         Lua = {
                             diagnostics = { globals = { 'vim' }, },
@@ -84,13 +87,13 @@ return {
                 })
             end
             if vim.g.language.typescript then
-                require("lspconfig").tsserver.setup({})
+                lspconfig.tsserver.setup({})
             end
             if vim.g.language.json then
-                require("lspconfig").jsonls.setup({})
+                lspconfig.jsonls.setup({})
             end
             if vim.g.language.swift then
-                require("lspconfig").sourcekit.setup({})
+                lspconfig.sourcekit.setup({})
             end
 
 
