@@ -7,7 +7,7 @@ return {
             --设置背景图片
             require('onedark').setup({
                 style = 'darker',
-                transparent = false,
+                -- transparent =true,
                 highlights = {}
             })
             require('onedark').load()
@@ -23,7 +23,9 @@ return {
     {
         "nvim-lualine/lualine.nvim",
         event = "VeryLazy",
-        config = true
+        opts={
+            theme = "onedark",
+        }
     },
 
     {

@@ -123,8 +123,13 @@ return {
             require("nvim-treesitter.configs").setup({
                 ensure_installed = { "python", "rust", "cpp", "c",
                     "lua", "json", "javascript", "html", "toml" },
-                highlight = { enable = true, disable = { "latex" }, },
-                indent = { enable = true, },
+                highlight = {
+                    enable = true,
+                    disable = { "latex" },
+                },
+                indent = {
+                    enable = true,
+                },
             })
         end
     },
@@ -235,7 +240,7 @@ return {
                 timeout = 2000,
                 -- fps = 1,
                 -- render = "default",
-                -- background_colour = "Normal",
+                -- background_colour = "#000000",
                 max_width = math.floor(vim.api.nvim_win_get_width(0) / 2),
                 max_height = math.floor(vim.api.nvim_win_get_height(0) / 4),
                 -- level = "TRACE",
@@ -356,5 +361,4 @@ return {
             vim.keymap.set('n', '<leader>tf', '<cmd>ToggleTerm direction=float<CR>')
         end
     },
-
 }

@@ -1,5 +1,5 @@
 -- autosave
-vim.api.nvim_create_autocmd({ "CursorHold" }, {
+vim.api.nvim_create_autocmd({ "InsertLeave"}, {
     callback = function()
         vim.fn.execute("silent! write")
     end,
