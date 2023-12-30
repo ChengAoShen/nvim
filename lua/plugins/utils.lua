@@ -353,12 +353,48 @@ return {
 
     {
         "akinsho/toggleterm.nvim",
-        event = "VeryLazy",
-        config = function()
-            require("toggleterm").setup({})
-            vim.keymap.set('n', '<leader>th', '<cmd>ToggleTerm size=20 direction=horizontal<CR>')
-            vim.keymap.set('n', '<leader>tv', '<cmd>ToggleTerm size=80 direction=vertical<CR>')
-            vim.keymap.set('n', '<leader>tf', '<cmd>ToggleTerm direction=float<CR>')
-        end
+        lazy = true,
+        keys = {
+            {
+                "<leader>th",
+                "<cmd>ToggleTerm size=20 direction=horizontal<CR>",
+                mode = { "n", "t" },
+                desc = "Open horizontal terminal"
+            },
+            {
+                "<leader>tv",
+                "<cmd>ToggleTerm size=80 direction=vertical<CR>",
+                mode = { "n", "t" },
+                desc = "Open vertical terminal"
+            },
+            {
+                "<leader>tf",
+                "<cmd>ToggleTerm direction=float<CR>",
+                mode = { "n", "t" },
+                desc = "Open floating terminal"
+            },
+        },
+        opts = {}
+    },
+
+    {
+        "folke/trouble.nvim",
+        lazy = true,
+        keys = {
+            {
+                "<leader>td",
+                "<cmd>TroubleToggle lsp_document_diagnostics<cr>"
+                ,
+                mode = { "n", "t" },
+                desc = "Document trouble"
+            },
+            {
+                "<leader>tw",
+                "<cmd>TroubleToggle lsp_workspace_diagnostics<cr>",
+                mode = { "n", "t" },
+                desc = "Workspace trouble"
+            },
+        },
+        opts = {},
     },
 }
