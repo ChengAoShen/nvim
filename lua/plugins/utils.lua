@@ -412,4 +412,12 @@ return {
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = {}
     },
+
+    {
+        "f-person/git-blame.nvim" ,
+        event = "VeryLazy",
+        config = function()
+            vim.keymap.set("n", "<leader>gb", "<cmd>GitBlameToggle<CR>")
+        end
+    }
 }
