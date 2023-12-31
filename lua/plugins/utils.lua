@@ -217,11 +217,11 @@ return {
 
     {
         "sidebar-nvim/sidebar.nvim",
-        event = "VeryLazy",
+        -- lazy = true,
         config = function()
             require("sidebar-nvim").setup({
                 open = false,
-                sections = { "todos", "symbols", "diagnostics", "git" },
+                sections = { "symbols", "diagnostics", "git" },
             })
             vim.keymap.set("n", "<C-M>", "<cmd>SidebarNvimToggle<CR>")
         end
@@ -383,18 +383,33 @@ return {
         keys = {
             {
                 "<leader>td",
-                "<cmd>TroubleToggle lsp_document_diagnostics<cr>"
+                "<cmd>TroubleToggle document_diagnostics<cr>"
                 ,
                 mode = { "n", "t" },
                 desc = "Document trouble"
             },
+
             {
                 "<leader>tw",
-                "<cmd>TroubleToggle lsp_workspace_diagnostics<cr>",
+                "<cmd>TroubleToggle workspace_diagnostics<cr>",
                 mode = { "n", "t" },
                 desc = "Workspace trouble"
             },
+
+            {
+                "<leader>tt",
+                "<cmd>TodoTrouble<CR>",
+                mode = { "n", "t" },
+                desc = "Todo trouble"
+            }
         },
         opts = {},
+    },
+
+    {
+        "folke/todo-comments.nvim",
+        event = "VeryLazy",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        opts = {}
     },
 }

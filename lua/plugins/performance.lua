@@ -23,7 +23,7 @@ return {
     {
         "nvim-lualine/lualine.nvim",
         event = "VeryLazy",
-        opts={
+        opts = {
             theme = "onedark",
         }
     },
@@ -65,13 +65,6 @@ return {
             }
             require("alpha").setup(dashboard.config)
         end
-    },
-
-    {
-        "folke/todo-comments.nvim",
-        event = "VeryLazy",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        config = true
     },
 
     {
