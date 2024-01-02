@@ -216,18 +216,6 @@ return {
     },
 
     {
-        "sidebar-nvim/sidebar.nvim",
-        -- lazy = true,
-        config = function()
-            require("sidebar-nvim").setup({
-                open = false,
-                sections = { "symbols", "diagnostics", "git" },
-            })
-            vim.keymap.set("n", "<C-M>", "<cmd>SidebarNvimToggle<CR>")
-        end
-    },
-
-    {
         "rcarriga/nvim-notify",
         event = "VeryLazy",
         config = function()
