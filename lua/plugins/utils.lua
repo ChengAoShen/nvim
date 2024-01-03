@@ -402,7 +402,7 @@ return {
     },
 
     {
-        "f-person/git-blame.nvim" ,
+        "f-person/git-blame.nvim",
         event = "VeryLazy",
         config = function()
             vim.keymap.set("n", "<leader>gb", "<cmd>GitBlameToggle<CR>")

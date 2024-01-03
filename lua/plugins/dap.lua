@@ -8,8 +8,6 @@ return {
             vim.keymap.set('n', '<F12>', function() require('dap').step_out() end)
             vim.keymap.set('n', '<Leader>b', function() require('dap').toggle_breakpoint() end)
             vim.keymap.set('n', '<Leader>B', function() require('dap').set_breakpoint() end)
-            vim.keymap.set('n', '<Leader>lp',
-                function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
             vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
             vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
             vim.keymap.set({ 'n', 'v' }, '<Leader>dh', function()
@@ -26,6 +24,34 @@ return {
                 local widgets = require('dap.ui.widgets')
                 widgets.centered_float(widgets.scopes)
             end)
+        end
+    },
+
+
+    {
+        "jay-babu/mason-nvim-dap.nvim",
+        event = "VeryLazy",
+        depends = { "williamboman/mason.nvim", "mfussenegger/nvim-dap", },
+        config = function()
+            require('mason-nvim-dap').setup({
+                ensure_installed = { "debugpy" },
+                handlers = {
+                    function(config)
+                        require('mason-nvim-dap').default_setup(config)
+                    end,
+                    python = function(config)
+                        config.adapters = {
+                            type = "executable",
+                            command = "ipython",
+                            args = {
+                                "-m",
+                                "debugpy.adapter",
+                            },
+                        }
+                        require('mason-nvim-dap').default_setup(config) -- don't forget this!
+                    end,
+                },
+            })
         end
     },
 
@@ -55,33 +81,6 @@ return {
             dap.listeners.before.event_exited["dapui_config"] = function()
                 dapui.close()
             end
-        end
-    },
-
-    {
-        "jay-babu/mason-nvim-dap.nvim",
-        event = "VeryLazy",
-        depends = { "williamboman/mason.nvim", "mfussenegger/nvim-dap", },
-        config = function()
-            require('mason-nvim-dap').setup({
-                ensure_installed = { "debugpy" },
-                handlers = {
-                    function(config)
-                        require('mason-nvim-dap').default_setup(config)
-                    end,
-                    python = function(config)
-                        config.adapters = {
-                            type = "executable",
-                            command = "ipython",
-                            args = {
-                                "-m",
-                                "debugpy.adapter",
-                            },
-                        }
-                        require('mason-nvim-dap').default_setup(config) -- don't forget this!
-                    end,
-                },
-            })
         end
     },
 
