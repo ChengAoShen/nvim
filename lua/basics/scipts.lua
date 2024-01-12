@@ -1,8 +1,15 @@
 -- autosave
-vim.api.nvim_create_autocmd({ "InsertLeave"}, {
+vim.api.nvim_create_autocmd({ "InsertLeave" }, {
     callback = function()
         vim.fn.execute("silent! write")
     end,
+})
+
+-- yank highlight
+vim.api.nvim_create_autocmd('TextYankPost', {
+    callback = function()
+        vim.highlight.on_yank({ higroup = 'Visual', timeout = 200 })
+    end
 })
 
 -- lazy.nvim
