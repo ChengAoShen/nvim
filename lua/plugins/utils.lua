@@ -192,8 +192,8 @@ return {
         opts = {
             filetype = {
                 python = "cd $dir && ipython -i $fileName",
-                c = "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
-                cpp = "cd $dir && g++ $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+                c = "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir/$fileNameWithoutExt",
+                cpp = "cd $dir && g++ $fileName -o $fileNameWithoutExt && $dir/$fileNameWithoutExt",
                 rust = "cd $dir && cargo run",
                 lua = "cd $dir && lua $fileName",
             },
