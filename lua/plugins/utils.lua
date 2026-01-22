@@ -1,9 +1,11 @@
 return {
+    -- Activity tracking (WakaTime)
     {
         "wakatime/vim-wakatime",
         event = "VeryLazy",
     },
 
+    -- File explorer tree
     {
         "nvim-tree/nvim-tree.lua",
         dependencies = "nvim-tree/nvim-web-devicons",
@@ -34,6 +36,7 @@ return {
         end
     },
 
+    -- Seamless window navigation
     {
         'numToStr/Navigator.nvim',
         lazy = true,
@@ -46,30 +49,28 @@ return {
         config = true
     },
 
+    -- Better text objects
     {
         'echasnovski/mini.ai',
         event = "VeryLazy",
         config = true
     },
 
+    -- Comment toggling
     {
         "echasnovski/mini.comment",
         event = "VeryLazy",
         config = true
     },
 
+    -- Auto-close pairs
     {
         'windwp/nvim-autopairs',
         event = "InsertEnter",
         config = true
     },
 
-    {
-        "lewis6991/gitsigns.nvim",
-        event = "VeryLazy",
-        config = true
-    },
-
+    -- Fuzzy finder
     {
         "nvim-telescope/telescope.nvim",
         event = "VeryLazy",
@@ -109,31 +110,14 @@ return {
         end
     },
 
+    -- Surround text editing
     {
         "kylechui/nvim-surround",
         event = "InsertEnter",
         config = true
     },
 
-    {
-        "nvim-treesitter/nvim-treesitter",
-        event = "VeryLazy",
-        build = ":TSUpdate",
-        config = function()
-            require("nvim-treesitter.configs").setup({
-                ensure_installed = { "python", "rust", "cpp", "c",
-                    "lua", "json", "javascript", "html", "toml" },
-                highlight = {
-                    enable = true,
-                    disable = { "latex" },
-                },
-                indent = {
-                    enable = true,
-                },
-            })
-        end
-    },
-
+    -- Enhanced jump/search motions
     {
         "folke/flash.nvim",
         lazy = true,
@@ -172,6 +156,7 @@ return {
         },
     },
 
+    -- Accelerated j/k scrolling
     {
         "rhysd/accelerated-jk",
         lazy = true,
@@ -181,231 +166,32 @@ return {
         },
     },
 
-    {
-        "simrat39/symbols-outline.nvim",
-        config = true
-    },
-
-    {
-        "CRAG666/code_runner.nvim",
-        lazy = true,
-        opts = {
-            filetype = {
-                python = "cd $dir && ipython -i $fileName",
-                c = "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir/$fileNameWithoutExt",
-                cpp = "cd $dir && g++ $fileName -o $fileNameWithoutExt && $dir/$fileNameWithoutExt",
-                rust = "cd $dir && cargo run",
-                lua = "cd $dir && lua $fileName",
-            },
-        },
-        keys = {
-            { "<leader>rc", mode = "n", "<cmd>RunCode<CR>", desc = "Run Code" },
-        },
-    },
-
+    -- Git diff viewer
     {
         "sindrets/diffview.nvim",
         event = "VeryLazy",
         config = true
     },
 
-    {
-        'simrat39/symbols-outline.nvim',
-        event  = "VeryLazy",
-        config = true
-    },
-
-    {
-        "rcarriga/nvim-notify",
-        event = "VeryLazy",
-        config = function()
-            local notify = require("notify")
-            notify.setup({
-                -- -- "fade", "slide", "fade_in_slide_out", "static"
-                -- stages = "static",
-                -- on_open = nil,
-                -- on_close = nil,
-                timeout = 2000,
-                -- fps = 1,
-                -- render = "default",
-                -- background_colour = "#000000",
-                max_width = math.floor(vim.api.nvim_win_get_width(0) / 2),
-                max_height = math.floor(vim.api.nvim_win_get_height(0) / 4),
-                -- level = "TRACE",
-            })
-
-            vim.notify = notify
-        end,
-    },
-
-    {
-        "folke/noice.nvim",
-        event = "VeryLazy",
-        dependencies = "MunifTanjim/nui.nvim",
-        opts = {
-            lsp = {
-                override = {
-                    ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-                    ["vim.lsp.util.stylize_markdown"] = true,
-                    ["cmp.entry.get_documentation"] = true,
-                },
-            },
-            presets = {
-                bottom_search = true,         -- use a classic bottom cmdline for search
-                command_palette = true,       -- position the cmdline and popupmenu together
-                long_message_to_split = true, -- long messages will be sent to a split
-                inc_rename = false,           -- enables an input dialog for inc-rename.nvim
-                lsp_doc_border = false,       -- add a border to hover docs and signature help
-            },
-        },
-        config = true
-    },
-
-    {
-        'rmagatti/goto-preview',
-        event = "VeryLazy",
-        opts = {
-            default_mappings = true
-        },
-        config = true
-    },
-
+    -- Animated cursor
     {
         "gen740/SmoothCursor.nvim",
         event = "VeryLazy",
         config = true
     },
 
+    -- Keybinding hints
     {
         "folke/which-key.nvim",
         event = "VeryLazy",
         config = true
     },
 
-    {
-        "ellisonleao/glow.nvim",
-        event = "VeryLazy",
-        config = true,
-        cmd = "Glow"
-    },
-
-    {
-        "kevinhwang91/nvim-ufo",
-        dependencies = "kevinhwang91/promise-async",
-        event = "VeryLazy",
-        config = function()
-            local handler = function(virtText, lnum, endLnum, width, truncate)
-                local newVirtText = {}
-                local suffix = (' 󰁂 %d '):format(endLnum - lnum)
-                local sufWidth = vim.fn.strdisplaywidth(suffix)
-                local targetWidth = width - sufWidth
-                local curWidth = 0
-                for _, chunk in ipairs(virtText) do
-                    local chunkText = chunk[1]
-                    local chunkWidth = vim.fn.strdisplaywidth(chunkText)
-                    if targetWidth > curWidth + chunkWidth then
-                        table.insert(newVirtText, chunk)
-                    else
-                        chunkText = truncate(chunkText, targetWidth - curWidth)
-                        local hlGroup = chunk[2]
-                        table.insert(newVirtText, { chunkText, hlGroup })
-                        chunkWidth = vim.fn.strdisplaywidth(chunkText)
-                        -- str width returned from truncate() may less than 2nd argument, need padding
-                        if curWidth + chunkWidth < targetWidth then
-                            suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
-                        end
-                        break
-                    end
-                    curWidth = curWidth + chunkWidth
-                end
-                table.insert(newVirtText, { suffix, 'MoreMsg' })
-                return newVirtText
-            end
-            vim.o.foldcolumn = '0' -- '0' is not bad
-            vim.o.foldlevel = 99   -- Using ufo provider need a large value
-            vim.o.foldlevelstart = 99
-            vim.o.foldenable = true
-            vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
-            vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
-            vim.keymap.set('n', 'zr', require('ufo').openFoldsExceptKinds)
-            vim.keymap.set('n', 'zm', require('ufo').closeFoldsWith)
-
-            require("ufo").setup({
-                fold_virt_text_handler = handler,
-                provider_selector = function(bufnr, filetype, buftype)
-                    return { 'treesitter', 'indent' }
-                end
-            })
-        end
-    },
-
-    {
-        "akinsho/toggleterm.nvim",
-        lazy = true,
-        keys = {
-            {
-                "<leader>th",
-                "<cmd>ToggleTerm size=20 direction=horizontal<CR>",
-                mode = { "n", "t" },
-                desc = "Open horizontal terminal"
-            },
-            {
-                "<leader>tv",
-                "<cmd>ToggleTerm size=80 direction=vertical<CR>",
-                mode = { "n", "t" },
-                desc = "Open vertical terminal"
-            },
-            {
-                "<leader>tf",
-                "<cmd>ToggleTerm direction=float<CR>",
-                mode = { "n", "t" },
-                desc = "Open floating terminal"
-            },
-        },
-        opts = {}
-    },
-
-    {
-        "folke/trouble.nvim",
-        lazy = true,
-        keys = {
-            {
-                "<leader>td",
-                "<cmd>TroubleToggle document_diagnostics<cr>"
-                ,
-                mode = { "n", "t" },
-                desc = "Document trouble"
-            },
-
-            {
-                "<leader>tw",
-                "<cmd>TroubleToggle workspace_diagnostics<cr>",
-                mode = { "n", "t" },
-                desc = "Workspace trouble"
-            },
-
-            {
-                "<leader>tt",
-                "<cmd>TodoTrouble<CR>",
-                mode = { "n", "t" },
-                desc = "Todo trouble"
-            }
-        },
-        opts = {},
-    },
-
+    -- Highlight TODO/FIXME comments
     {
         "folke/todo-comments.nvim",
         event = "VeryLazy",
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = {}
     },
-
-    {
-        "f-person/git-blame.nvim",
-        event = "VeryLazy",
-        config = function()
-            vim.keymap.set("n", "<leader>gb", "<cmd>GitBlameToggle<CR>")
-        end
-    }
 }

@@ -1,10 +1,10 @@
 return {
+    -- Colorscheme
     {
         "navarasu/onedark.nvim",
         lazy = false,
         priority = 1000,
         config = function()
-            --设置背景图片
             require('onedark').setup({
                 style = 'darker',
                 -- transparent =true,
@@ -14,12 +14,14 @@ return {
         end
     },
 
+    -- File icons used by UI plugins
     {
         "nvim-tree/nvim-web-devicons",
         event = "VeryLazy",
         config = true
     },
 
+    -- Statusline
     {
         "nvim-lualine/lualine.nvim",
         event = "VeryLazy",
@@ -28,12 +30,14 @@ return {
         }
     },
 
+    -- Buffer tabs
     {
         "akinsho/bufferline.nvim",
         event = "VeryLazy",
         config = true
     },
 
+    -- Breadcrumb navigation in winbar
     {
         "utilyre/barbecue.nvim",
         event = "VeryLazy",
@@ -41,6 +45,7 @@ return {
         opts = {}
     },
 
+    -- Indentation guides
     {
         "lukas-reineke/indent-blankline.nvim",
         event = "VeryLazy",
@@ -49,6 +54,7 @@ return {
         end
     },
 
+    -- Dashboard/start screen
     {
         'goolord/alpha-nvim',
         config = function()
@@ -67,15 +73,7 @@ return {
         end
     },
 
-    {
-        "hiphish/rainbow-delimiters.nvim",
-        event  = "VeryLazy",
-        config = function()
-            require("rainbow-delimiters.setup").setup({})
-        end
-
-    },
-
+    -- Search match lens integration
     {
         "kevinhwang91/nvim-hlslens",
         event = "VeryLazy",
@@ -84,6 +82,7 @@ return {
         end,
     },
 
+    -- Scrollbar with search markers
     {
         "petertriho/nvim-scrollbar",
         event = "VeryLazy",
