@@ -24,7 +24,7 @@ return {
     -- Statusline
     {
         "nvim-lualine/lualine.nvim",
-        event = "VeryLazy",
+        event = "UIEnter",
         opts = {
             theme = "onedark",
         }
@@ -33,14 +33,14 @@ return {
     -- Buffer tabs
     {
         "akinsho/bufferline.nvim",
-        event = "VeryLazy",
+        event = "BufReadPost",
         config = true
     },
 
     -- Breadcrumb navigation in winbar
     {
         "utilyre/barbecue.nvim",
-        event = "VeryLazy",
+        event = "BufReadPost",
         dependencies = "SmiteshP/nvim-navic",
         opts = {}
     },
@@ -48,7 +48,7 @@ return {
     -- Indentation guides
     {
         "lukas-reineke/indent-blankline.nvim",
-        event = "VeryLazy",
+        event = "BufReadPost",
         config = function()
             require("ibl").setup()
         end
@@ -57,6 +57,7 @@ return {
     -- Dashboard/start screen
     {
         'goolord/alpha-nvim',
+        event = "VimEnter",
         config = function()
             local dashboard = require("alpha.themes.dashboard")
             dashboard.section.header.val = {
@@ -76,7 +77,7 @@ return {
     -- Search match lens integration
     {
         "kevinhwang91/nvim-hlslens",
-        event = "VeryLazy",
+        event = "BufReadPost",
         config = function()
             require("scrollbar.handlers.search").setup({})
         end,
@@ -85,7 +86,7 @@ return {
     -- Scrollbar with search markers
     {
         "petertriho/nvim-scrollbar",
-        event = "VeryLazy",
+        event = "BufReadPost",
         config = true
     },
 

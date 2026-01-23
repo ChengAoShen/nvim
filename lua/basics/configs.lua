@@ -36,8 +36,8 @@ vim.o.guifont = "FiraCode Nerd Font Mono:h18"
 -- Seeting global language options
 vim.g.language = {
     python = true,
-    rust = true,
+    rust = false,
     lua = true,
     json = true,
-    swift = true,
+    swift = false,
 }

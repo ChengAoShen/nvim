@@ -9,6 +9,7 @@ return {
     {
         "nvim-tree/nvim-tree.lua",
         dependencies = "nvim-tree/nvim-web-devicons",
+        lazy = true,
         keys = {
             { "<C-N>", "<CMD>NvimTreeToggle<CR>", mode = { "n", "t" } },
         },
@@ -32,7 +33,7 @@ return {
 
                 })
             vim.g.loaded_netrw = 1
-            vim.g.loaded_newrwPlugin = 1
+            vim.g.loaded_netrwPlugin = 1
         end
     },
 
