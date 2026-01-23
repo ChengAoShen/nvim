@@ -1,0 +1,11 @@
+.DS_Store
+*.bak
+*.bak.*
+*.swp
+*.swo
+*.tmp
+.env
+.idea/
+.vscode/
+lazy-lock.json
+node_modules/

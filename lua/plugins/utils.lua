@@ -23,12 +23,13 @@ return {
                     },
                     filters = {
                         custom = {
-                            ".git",
-                            ".pytest_cache",
-                            ".vscode",
-                            ".cache",
-                            ".DS_Store",
-                            "__pycache__", }
+                            "\\.git$",
+                            "\\.vscode$",
+                            "\\.cache$",
+                            "\\.DS_Store$",
+                            "\\.pytest_cache$",
+                            "__pycache__$",
+                        }
                     },
 
                 })
