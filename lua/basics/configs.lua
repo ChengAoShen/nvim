@@ -40,4 +40,5 @@ vim.g.language = {
     lua = true,
     json = true,
     swift = false,
+    typescript=true,
 }

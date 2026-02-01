@@ -25,14 +25,11 @@ return {
             if vim.g.language.c then
                 table.insert(ensure_installed_table, "clangd")
             end
-            if vim.g.language.tex then
-                table.insert(ensure_installed_table, "texlab")
-            end
             if vim.g.language.lua then
                 table.insert(ensure_installed_table, "lua_ls")
             end
             if vim.g.language.typescript then
-                table.insert(ensure_installed_table, "tsserver")
+                table.insert(ensure_installed_table, "ts_ls")
             end
             if vim.g.language.json then
                 table.insert(ensure_installed_table, "jsonls")
