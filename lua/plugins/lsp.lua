@@ -48,7 +48,7 @@ return {
             local servers = {}
 
             if vim.g.language.python then
-                servers.ruff_lsp = {}
+                servers.ruff = {}
                 servers.pyright = {
                     settings = {
                         python = {
@@ -79,7 +79,7 @@ return {
                 }
             end
             if vim.g.language.typescript then
-                servers.tsserver = {}
+                servers.ts_ls = {}
             end
             if vim.g.language.json then
                 servers.jsonls = {}
@@ -109,6 +109,7 @@ return {
                     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
                     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
                     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+                    vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, opts)
                     vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
                     vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
                     vim.keymap.set('n', '<space>wl', function()

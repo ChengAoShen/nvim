@@ -33,6 +33,15 @@ opt.cursorline = true
 vim.wo.colorcolumn = "88"
 vim.o.guifont = "FiraCode Nerd Font Mono:h18"
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "javascript", "typescript", "json" },
+    callback = function()
+        vim.opt_local.tabstop = 2
+        vim.opt_local.shiftwidth = 2
+        vim.opt_local.softtabstop = 2
+    end,
+})
+
 -- Seeting global language options
 vim.g.language = {
     python = true,
