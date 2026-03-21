@@ -45,9 +45,9 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Seeting global language options
 vim.g.language = {
     python = true,
-    rust = false,
+    rust = true,
     lua = true,
     json = true,
     swift = false,
-    typescript=true,
+    typescript = true,
 }

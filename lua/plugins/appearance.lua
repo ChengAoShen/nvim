@@ -1,16 +1,32 @@
 return {
     -- Colorscheme
+    -- {
+    --     "navarasu/onedark.nvim",
+    --     lazy = false,
+    --     priority = 1000,
+    --     config = function()
+    --         require('onedark').setup({
+    --             style = 'darker',
+    --             transparent = true,
+    --             highlights = {}
+    --         })
+    --         require('onedark').load()
+    --     end
+    -- },
     {
-        "navarasu/onedark.nvim",
+        "folke/tokyonight.nvim",
         lazy = false,
         priority = 1000,
         config = function()
-            require('onedark').setup({
-                style = 'darker',
+            require('tokyonight').setup({
+                -- style = 'darker',
                 transparent = true,
-                highlights = {}
+                styles = {
+                    sidebars = "transparent",
+                    floats = "transparent",
+                },
             })
-            require('onedark').load()
+            require('tokyonight').load()
         end
     },
 
@@ -26,7 +42,8 @@ return {
         "nvim-lualine/lualine.nvim",
         event = "UIEnter",
         opts = {
-            theme = "onedark",
+            -- theme = "onedark",
+            theme = "tokyonight"
         }
     },
 
