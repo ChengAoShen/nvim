@@ -22,9 +22,12 @@ return {
             end
             require("nvim-treesitter").install(parsers)
             vim.api.nvim_create_autocmd("FileType", {
-                pattern = parsers, -- 只对安装了 parser 的 filetype 生效
+                pattern = parsers,
                 callback = function(ev)
                     vim.treesitter.start(ev.buf)
+                    vim.wo[0][0].foldmethod = 'expr'
+                    vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+                    vim.wo[0][0].foldlevel = 99
                 end,
             })
         end,
