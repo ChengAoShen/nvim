@@ -1,3 +1,4 @@
+-- npm install tree-sitter-cli
 return {
     {
         "nvim-treesitter/nvim-treesitter",
