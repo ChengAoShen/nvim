@@ -62,33 +62,45 @@ return {
         opts = {}
     },
 
-    -- Indentation guides
+    -- Snacks: dashboard, indent guides, smooth scroll
     {
-        "lukas-reineke/indent-blankline.nvim",
-        event = "BufReadPost",
-        config = function()
-            require("ibl").setup()
-        end
-    },
-
-    -- Dashboard/start screen
-    {
-        'goolord/alpha-nvim',
-        event = "VimEnter",
-        config = function()
-            local dashboard = require("alpha.themes.dashboard")
-            dashboard.section.header.val = {
-                "                                                     ",
-                "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
-                "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
-                "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
-                "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
-                "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
-                "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
-                "                                                     ",
-            }
-            require("alpha").setup(dashboard.config)
-        end
+        "folke/snacks.nvim",
+        lazy = false,
+        priority = 900,
+        opts = {
+            picker = {
+                enabled = true,
+            },
+            scroll = {
+                enabled = true,
+            },
+            indent = {
+                enabled = true,
+            },
+            dashboard = {
+                enabled = true,
+                preset = {
+                    header = table.concat({
+                        "                                                     ",
+                        "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
+                        "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
+                        "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
+                        "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
+                        "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
+                        "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
+                        "                                                     ",
+                    }, "\n"),
+                },
+            },
+        },
+        keys = {
+            { "<leader>ff",      function() Snacks.picker.files() end,   desc = "Find files" },
+            { "<leader>fg",      function() Snacks.picker.grep() end,    desc = "Live grep" },
+            { "<leader><space>", function() Snacks.picker.buffers() end, desc = "Buffers" },
+            { "<leader>fh",      function() Snacks.picker.help() end,    desc = "Help tags" },
+            { "<leader>?",       function() Snacks.picker.recent() end,  desc = "Recent files" },
+            { "<leader>/",       function() Snacks.picker.lines() end,   desc = "Search in buffer" },
+        },
     },
 
     -- Search match lens integration

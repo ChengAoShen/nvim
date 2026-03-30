@@ -29,6 +29,9 @@ opt.splitright = true
 opt.splitbelow = true
 opt.exrc = true
 opt.cursorline = true
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldlevel = 99
 
 vim.wo.colorcolumn = "88"
 vim.o.guifont = "FiraCode Nerd Font Mono:h18"
