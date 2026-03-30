@@ -17,7 +17,7 @@ return {
                     css = { "prettierd" },
                     scss = { "prettierd" },
                     less = { "prettierd" },
-                    python = { "ruff_format" },
+                    python = { "ruff_organize_imports", "ruff_format" },
                 },
                 format_on_save = function()
                     return {
