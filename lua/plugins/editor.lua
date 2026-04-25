@@ -6,13 +6,6 @@ return {
         config = true
     },
 
-    -- Comment toggling
-    {
-        "echasnovski/mini.comment",
-        event = "VeryLazy",
-        config = true
-    },
-
     -- Auto-close pairs
     {
         'windwp/nvim-autopairs',
@@ -23,7 +16,7 @@ return {
     -- Surround text editing
     {
         "kylechui/nvim-surround",
-        event = "InsertEnter",
+        event = "VeryLazy",
         config = true
     },
 

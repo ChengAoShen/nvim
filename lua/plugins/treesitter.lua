@@ -1,10 +1,8 @@
--- npm install tree-sitter-cli
+-- requires: tree-sitter CLI (npm install -g tree-sitter-cli), gcc/clang, git
 return {
     {
-        "nvim-treesitter/nvim-treesitter",
-        branch = "main",
+        "romus204/tree-sitter-manager.nvim",
         lazy = false,
-        build = ":TSUpdate",
         config = function()
             local lang_parsers = {
                 python     = { "python" },
@@ -21,13 +19,16 @@ return {
                     vim.list_extend(parsers, ps)
                 end
             end
-            require("nvim-treesitter").install(parsers)
+
+            require("tree-sitter-manager").setup({
+                ensure_installed = parsers,
+            })
+
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = parsers,
-                callback = function(ev)
-                    vim.treesitter.start(ev.buf)
-                    vim.wo[0][0].foldmethod = 'expr'
-                    vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+                callback = function()
+                    vim.wo[0][0].foldmethod = "expr"
+                    vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
                     vim.wo[0][0].foldlevel = 99
                 end,
             })

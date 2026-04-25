@@ -19,13 +19,10 @@ return {
                     less = { "prettierd" },
                     python = { "ruff_organize_imports", "ruff_format" },
                 },
-                format_on_save = function()
-                    return {
-                        lsp_fallback = true,
-                        async = false,
-                        timeout_ms = 2000,
-                    }
-                end,
+                format_on_save = {
+                    lsp_format = "fallback",
+                    timeout_ms = 2000,
+                },
             })
         end,
     },

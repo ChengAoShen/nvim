@@ -5,48 +5,16 @@ return {
         event = "VeryLazy",
     },
 
-    -- File explorer tree
+    -- Seamless window/tmux navigation
     {
-        "nvim-tree/nvim-tree.lua",
-        dependencies = "nvim-tree/nvim-web-devicons",
+        "mrjones2014/smart-splits.nvim",
         lazy = true,
         keys = {
-            { "<C-N>", "<CMD>NvimTreeToggle<CR>", mode = { "n", "t" } },
+            { "<leader>h", function() require("smart-splits").move_cursor_left() end,  mode = { "n", "t" } },
+            { "<leader>j", function() require("smart-splits").move_cursor_down() end,  mode = { "n", "t" } },
+            { "<leader>k", function() require("smart-splits").move_cursor_up() end,    mode = { "n", "t" } },
+            { "<leader>l", function() require("smart-splits").move_cursor_right() end, mode = { "n", "t" } },
         },
-        config = function()
-            require("nvim-tree").setup({
-                git = {
-                    enable = true,
-                    ignore = false,
-                    timeout = 500,
-                },
-                filters = {
-                    custom = {
-                        "\\.git$",
-                        "\\.vscode$",
-                        "\\.cache$",
-                        "\\.DS_Store$",
-                        "\\.pytest_cache$",
-                        "__pycache__$",
-                    }
-                },
-            })
-            vim.g.loaded_netrw = 1
-            vim.g.loaded_netrwPlugin = 1
-        end
-    },
-
-    -- Seamless window navigation
-    {
-        'numToStr/Navigator.nvim',
-        lazy = true,
-        keys = {
-            { "<leader>h", "<CMD>NavigatorLeft<CR>",  mode = { "n", "t" } },
-            { "<leader>j", "<CMD>NavigatorDown<CR>",  mode = { "n", "t" } },
-            { "<leader>k", "<CMD>NavigatorUp<CR>",    mode = { "n", "t" } },
-            { "<leader>l", "<CMD>NavigatorRight<CR>", mode = { "n", "t" } },
-        },
-        config = true
     },
 
     -- Enhanced jump/search motions

@@ -1,18 +1,4 @@
 return {
-    -- Colorscheme
-    -- {
-    --     "navarasu/onedark.nvim",
-    --     lazy = false,
-    --     priority = 1000,
-    --     config = function()
-    --         require('onedark').setup({
-    --             style = 'darker',
-    --             transparent = true,
-    --             highlights = {}
-    --         })
-    --         require('onedark').load()
-    --     end
-    -- },
     {
         "folke/tokyonight.nvim",
         lazy = false,
@@ -30,11 +16,17 @@ return {
         end
     },
 
-    -- File icons used by UI plugins
+    -- File icons (replaces nvim-web-devicons, provides compat layer)
     {
-        "nvim-tree/nvim-web-devicons",
-        event = "VeryLazy",
-        config = true
+        "echasnovski/mini.icons",
+        lazy = true,
+        opts = {},
+        init = function()
+            package.preload["nvim-web-devicons"] = function()
+                require("mini.icons").mock_nvim_web_devicons()
+                return package.loaded["nvim-web-devicons"]
+            end
+        end,
     },
 
     -- Statusline
@@ -56,10 +48,13 @@ return {
 
     -- Breadcrumb navigation in winbar
     {
-        "utilyre/barbecue.nvim",
+        "Bekaboo/dropbar.nvim",
         event = "BufReadPost",
-        dependencies = "SmiteshP/nvim-navic",
-        opts = {}
+        keys = {
+            { "<leader>;", function() require("dropbar.api").pick() end,                desc = "Pick winbar symbol" },
+            { "[;",        function() require("dropbar.api").goto_context_start() end,  desc = "Go to context start" },
+            { "];",        function() require("dropbar.api").select_next_context() end, desc = "Select next context" },
+        },
     },
 
     -- Snacks: dashboard, indent guides, smooth scroll
@@ -68,8 +63,22 @@ return {
         lazy = false,
         priority = 900,
         opts = {
+            explorer = {
+                enabled = true,
+            },
             picker = {
                 enabled = true,
+                sources = {
+                    explorer = {
+                        win = {
+                            list = {
+                                keys = {
+                                    ["<C-N>"] = "close",
+                                },
+                            },
+                        },
+                    },
+                },
             },
             scroll = {
                 enabled = true,
@@ -100,6 +109,7 @@ return {
             { "<leader>fh",      function() Snacks.picker.help() end,    desc = "Help tags" },
             { "<leader>?",       function() Snacks.picker.recent() end,  desc = "Recent files" },
             { "<leader>/",       function() Snacks.picker.lines() end,   desc = "Search in buffer" },
+            { "<C-N>",           function() Snacks.explorer() end,       desc = "Open file explorer", mode = { "n", "t" } },
         },
     },
 

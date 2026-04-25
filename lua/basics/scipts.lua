@@ -8,7 +8,7 @@ vim.api.nvim_create_autocmd({ "InsertLeave" }, {
 -- yank highlight
 vim.api.nvim_create_autocmd('TextYankPost', {
     callback = function()
-        vim.highlight.on_yank({ higroup = 'Visual', timeout = 200 })
+        vim.hl.on_yank({ higroup = 'Visual', timeout = 200 })
     end
 })
 
@@ -21,7 +21,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
 
 -- lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
     vim.fn.system({
         "git",
         "clone",
