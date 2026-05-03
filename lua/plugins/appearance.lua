@@ -29,21 +29,21 @@ return {
         end,
     },
 
-    -- Statusline
+    -- Statusline (with buffers section replacing bufferline)
     {
         "nvim-lualine/lualine.nvim",
         event = "UIEnter",
         opts = {
-            -- theme = "onedark",
-            theme = "tokyonight"
-        }
-    },
-
-    -- Buffer tabs
-    {
-        "akinsho/bufferline.nvim",
-        event = "BufReadPost",
-        config = true
+            options = { theme = "tokyonight", globalstatus = true },
+            sections = {
+                lualine_a = { "mode" },
+                lualine_b = { "branch", "diff", "diagnostics" },
+                lualine_c = { { "buffers", mode = 2, show_filename_only = true } },
+                lualine_x = { "encoding", "fileformat", "filetype" },
+                lualine_y = { "progress" },
+                lualine_z = { "location" },
+            },
+        },
     },
 
     -- Breadcrumb navigation in winbar
@@ -70,6 +70,7 @@ return {
                 enabled = true,
                 sources = {
                     explorer = {
+                        hidden = true,
                         win = {
                             list = {
                                 keys = {
@@ -111,22 +112,6 @@ return {
             { "<leader>/",       function() Snacks.picker.lines() end,   desc = "Search in buffer" },
             { "<C-N>",           function() Snacks.explorer() end,       desc = "Open file explorer", mode = { "n", "t" } },
         },
-    },
-
-    -- Search match lens integration
-    {
-        "kevinhwang91/nvim-hlslens",
-        event = "BufReadPost",
-        config = function()
-            require("scrollbar.handlers.search").setup({})
-        end,
-    },
-
-    -- Scrollbar with search markers
-    {
-        "petertriho/nvim-scrollbar",
-        event = "BufReadPost",
-        config = true
     },
 
 }

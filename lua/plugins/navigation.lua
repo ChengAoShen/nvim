@@ -56,16 +56,6 @@ return {
         },
     },
 
-    -- Accelerated j/k scrolling
-    {
-        "rhysd/accelerated-jk",
-        lazy = true,
-        keys = {
-            { "j", mode = "n", "<Plug>(accelerated_jk_gj)", desc = "Accelerated j" },
-            { "k", mode = "n", "<Plug>(accelerated_jk_gk)", desc = "Accelerated k" },
-        },
-    },
-
     -- Git diff viewer
     {
         "sindrets/diffview.nvim",

@@ -20,12 +20,17 @@ return {
         config = true
     },
 
-    -- Highlight TODO/FIXME comments
+    -- Highlight TODO/FIXME comments (picker via snacks)
     {
         "folke/todo-comments.nvim",
-        event = "VeryLazy",
+        event = "BufReadPost",
         dependencies = { "nvim-lua/plenary.nvim" },
-        opts = {}
+        opts = {},
+        keys = {
+            { "<leader>ft", function() Snacks.picker.todo_comments() end,        desc = "Todo comments" },
+            { "]t",         function() require("todo-comments").jump_next() end, desc = "Next todo" },
+            { "[t",         function() require("todo-comments").jump_prev() end, desc = "Prev todo" },
+        },
     },
 
     -- Keybinding hints
