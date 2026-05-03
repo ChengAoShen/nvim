@@ -1,3 +1,92 @@
+-- Single source of truth: each language maps to mason packages + lspconfig configs.
+-- mason: package names to install via mason
+-- servers: { [server_name] = config | function() return config end }
+-- Packages installed by mason but absent from `servers` (e.g. rust_analyzer)
+-- will be excluded from mason-lspconfig's automatic_enable.
+local LANG = {
+    python = {
+        mason = { "ruff", "ty" },
+        servers = {
+            -- ruff: lint / format / imports; ty: type checking + completion (Astral, beta)
+            ruff = {
+                on_attach = function(client, _)
+                    -- Defer hover to ty to avoid duplicates
+                    client.server_capabilities.hoverProvider = false
+                end,
+            },
+            ty = {},
+        },
+    },
+    rust = {
+        -- rust_analyzer is owned by rustaceanvim (see plugins/rust.lua)
+        mason = { "rust_analyzer", "taplo" },
+        servers = { taplo = {} },
+    },
+    c = {
+        mason = { "clangd" },
+        servers = { clangd = {} },
+    },
+    lua = {
+        mason = { "lua_ls" },
+        servers = {
+            lua_ls = {
+                settings = { Lua = { diagnostics = { globals = { "vim" } } } },
+            },
+        },
+    },
+    typescript = {
+        mason = { "vtsls" },
+        servers = {
+            vtsls = {
+                settings = {
+                    typescript = {
+                        inlayHints = {
+                            parameterNames = { enabled = "literals" },
+                            variableTypes = { enabled = false },
+                            propertyDeclarationTypes = { enabled = true },
+                            functionLikeReturnTypes = { enabled = true },
+                        },
+                    },
+                },
+            },
+        },
+    },
+    json = {
+        mason = { "jsonls" },
+        servers = {
+            jsonls = function()
+                local ok, ss = pcall(require, "schemastore")
+                return {
+                    settings = {
+                        json = {
+                            schemas = ok and ss.json.schemas() or nil,
+                            validate = { enable = true },
+                        },
+                    },
+                }
+            end,
+        },
+    },
+    tex = {
+        mason = {},
+        servers = { texlab = {} },
+    },
+    swift = {
+        mason = {},
+        servers = { sourcekit = {} },
+    },
+}
+
+local function active_specs()
+    local out = {}
+    for lang, spec in pairs(LANG) do
+        if vim.g.language and vim.g.language[lang] then
+            out[lang] = spec
+        end
+    end
+    return out
+end
+
 return {
     {
         "williamboman/mason.nvim",
@@ -9,34 +98,26 @@ return {
                     icons = {
                         package_installed = "✓",
                         package_pending = "➜",
-                        package_uninstalled = "✗"
-                    }
-                }
+                        package_uninstalled = "✗",
+                    },
+                },
             })
-            local ensure_installed_table = {}
-            if vim.g.language.python then
-                table.insert(ensure_installed_table, "ruff")
-                table.insert(ensure_installed_table, "pyright")
-            end
-            if vim.g.language.rust then
-                table.insert(ensure_installed_table, "rust_analyzer")
-                table.insert(ensure_installed_table, "taplo")
-            end
-            if vim.g.language.c then
-                table.insert(ensure_installed_table, "clangd")
-            end
-            if vim.g.language.lua then
-                table.insert(ensure_installed_table, "lua_ls")
-            end
-            if vim.g.language.typescript then
-                table.insert(ensure_installed_table, "ts_ls")
-            end
-            if vim.g.language.json then
-                table.insert(ensure_installed_table, "jsonls")
+
+            local ensure, exclude_auto = {}, {}
+            for _, spec in pairs(active_specs()) do
+                vim.list_extend(ensure, spec.mason)
+                for _, pkg in ipairs(spec.mason) do
+                    if not (spec.servers and spec.servers[pkg]) then
+                        table.insert(exclude_auto, pkg)
+                    end
+                end
             end
 
-            require("mason-lspconfig").setup({ ensure_installed = ensure_installed_table })
-        end
+            require("mason-lspconfig").setup({
+                ensure_installed = ensure,
+                automatic_enable = { exclude = exclude_auto },
+            })
+        end,
     },
 
     {
@@ -45,70 +126,25 @@ return {
         event = "VeryLazy",
         config = function()
             local capabilities = require("blink.cmp").get_lsp_capabilities()
-            local servers = {}
 
-            if vim.g.language.python then
-                servers.ruff = {}
-                servers.pyright = {
-                    settings = {
-                        python = {
-                            analysis = {
-                                typeCheckingMode = "basic",
-                            },
-                        },
-                    },
-                }
-            end
-            if vim.g.language.rust then
-                servers.rust_analyzer = {}
-                servers.taplo = {}
-            end
-            if vim.g.language.c then
-                servers.clangd = {}
-            end
-            if vim.g.language.tex then
-                servers.texlab = {}
-            end
-            if vim.g.language.lua then
-                servers.lua_ls = {
-                    settings = {
-                        Lua = {
-                            diagnostics = { globals = { "vim" } },
-                        },
-                    },
-                }
-            end
-            if vim.g.language.typescript then
-                servers.ts_ls = {}
-            end
-            if vim.g.language.json then
-                servers.jsonls = {}
-            end
-            if vim.g.language.swift then
-                servers.sourcekit = {}
+            for _, spec in pairs(active_specs()) do
+                for name, cfg in pairs(spec.servers or {}) do
+                    cfg = type(cfg) == "function" and cfg() or cfg
+                    cfg.capabilities = capabilities
+                    vim.lsp.config(name, cfg)
+                    vim.lsp.enable(name)
+                end
             end
 
-            for server, config in pairs(servers) do
-                config.capabilities = capabilities
-                vim.lsp.config(server, config)
-                vim.lsp.enable(server)
-            end
-
-
-            vim.api.nvim_create_autocmd('LspAttach', {
-                group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+            vim.api.nvim_create_autocmd("LspAttach", {
+                group = vim.api.nvim_create_augroup("UserLspConfig", {}),
                 callback = function(ev)
                     local opts = { buffer = ev.buf }
-                    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-                    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-                    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-                    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
-                    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
-                    vim.keymap.set('n', '<space>wl', function()
-                        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-                    end, opts)
-                    vim.keymap.set('n', '<space>f', function()
-                        vim.lsp.buf.format { async = true }
+                    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+                    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+                    vim.keymap.set("n", "<space>f", function()
+                        vim.lsp.buf.format({ async = true })
                     end, opts)
                 end,
             })
