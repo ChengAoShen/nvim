@@ -1,7 +1,12 @@
 -- autosave
 vim.api.nvim_create_autocmd({ "InsertLeave" }, {
     callback = function()
-        vim.fn.execute("silent! write")
+        local buf = vim.api.nvim_get_current_buf()
+        if vim.bo[buf].buftype ~= "" then return end
+        if not vim.bo[buf].modifiable or vim.bo[buf].readonly then return end
+        if not vim.bo[buf].modified then return end
+        if vim.api.nvim_buf_get_name(buf) == "" then return end
+        vim.cmd("silent! write")
     end,
 })
 

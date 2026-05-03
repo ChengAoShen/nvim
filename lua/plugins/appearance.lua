@@ -32,7 +32,7 @@ return {
     -- Statusline (with buffers section replacing bufferline)
     {
         "nvim-lualine/lualine.nvim",
-        event = "UIEnter",
+        event = "VeryLazy",
         opts = {
             options = { theme = "tokyonight", globalstatus = true },
             sections = {

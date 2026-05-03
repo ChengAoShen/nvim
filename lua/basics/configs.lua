@@ -11,12 +11,12 @@ opt.relativenumber = true
 opt.wildmenu = true
 opt.ignorecase = true
 opt.smartcase = true
-opt.completeopt = { "menu", "noselect" }
+opt.completeopt = { "menu", "menuone", "noselect" }
 opt.termguicolors = true
 opt.signcolumn = "yes"
 opt.swapfile = false
 opt.backup = false
-opt.updatetime = 50
+opt.updatetime = 250
 opt.wrap = false
 opt.linebreak = true
 opt.textwidth = 88
@@ -30,6 +30,12 @@ opt.exrc = true
 opt.cursorline = true
 
 vim.wo.colorcolumn = "88"
+
+vim.diagnostic.config({
+    virtual_text = true,
+    severity_sort = true,
+    float = { border = "rounded" },
+})
 vim.o.guifont = "FiraCode Nerd Font Mono:h18"
 
 vim.api.nvim_create_autocmd("FileType", {
