@@ -1,93 +1,46 @@
--- Single source of truth: each language maps to mason packages + lspconfig configs.
--- mason: package names to install via mason
--- servers: { [server_name] = config | function() return config end }
--- Packages installed by mason but absent from `servers` (e.g. rust_analyzer)
--- will be excluded from mason-lspconfig's automatic_enable.
-local LANG = {
-    python = {
-        mason = { "ruff", "ty" },
-        servers = {
-            -- ruff: lint / format / imports; ty: type checking + completion (Astral, beta)
-            ruff = {
-                on_attach = function(client, _)
-                    -- Defer hover to ty to avoid duplicates
-                    client.server_capabilities.hoverProvider = false
-                end,
-            },
-            ty = {},
-        },
-    },
-    rust = {
-        -- rust_analyzer is owned by rustaceanvim (see plugins/rust.lua)
-        mason = { "rust_analyzer", "taplo" },
-        servers = { taplo = {} },
-    },
-    c = {
-        mason = { "clangd" },
-        servers = { clangd = {} },
-    },
-    lua = {
-        mason = { "lua_ls" },
-        servers = {
-            lua_ls = {
-                settings = { Lua = { diagnostics = { globals = { "vim" } } } },
-            },
-        },
-    },
-    typescript = {
-        mason = { "vtsls" },
-        servers = {
-            vtsls = {
-                settings = {
-                    typescript = {
-                        inlayHints = {
-                            parameterNames = { enabled = "literals" },
-                            variableTypes = { enabled = false },
-                            propertyDeclarationTypes = { enabled = true },
-                            functionLikeReturnTypes = { enabled = true },
-                        },
-                    },
-                },
-            },
-        },
-    },
-    json = {
-        mason = { "jsonls" },
-        servers = {
-            jsonls = function()
-                local ok, ss = pcall(require, "schemastore")
-                return {
-                    settings = {
-                        json = {
-                            schemas = ok and ss.json.schemas() or nil,
-                            validate = { enable = true },
-                        },
-                    },
-                }
-            end,
-        },
-    },
-    tex = {
-        mason = {},
-        servers = { texlab = {} },
-    },
-    swift = {
-        mason = {},
-        servers = { sourcekit = {} },
-    },
-}
-
-local function active_specs()
-    local out = {}
-    for lang, spec in pairs(LANG) do
-        if vim.g.language and vim.g.language[lang] then
-            out[lang] = spec
-        end
-    end
-    return out
-end
+-- All language tooling: completion, mason, lspconfig, conform, schema/lazydev,
+-- and rustaceanvim. Driven by the registry in lua/lang.lua.
+local lang = require("lang")
 
 return {
+    -- Completion engine; also provides LSP capabilities used by lspconfig.
+    {
+        "saghen/blink.cmp",
+        event = "InsertEnter",
+        dependencies = { "rafamadriz/friendly-snippets" },
+        version = "1.*",
+        opts = {
+            keymap = {
+                preset = "default",
+                ["<Tab>"] = { "accept", "fallback" },
+                ["<CR>"] = { "accept", "fallback" },
+            },
+            appearance = { nerd_font_variant = "mono" },
+            completion = { documentation = { auto_show = false } },
+            sources = {
+                default = { "lsp", "path", "snippets", "buffer" },
+            },
+            fuzzy = { implementation = "prefer_rust" },
+        },
+        opts_extend = { "sources.default" },
+    },
+
+    -- JSON/YAML schema catalog (consumed by jsonls).
+    { "b0o/SchemaStore.nvim", lazy = true, version = false },
+
+    -- Neovim Lua dev: inject runtime libs and `vim` globals into lua_ls.
+    {
+        "folke/lazydev.nvim",
+        ft = "lua",
+        cond = function() return lang.is_enabled("lua") end,
+        opts = {
+            library = {
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
+
+    -- Mason: install LSP servers / formatters declared in lang.lua.
     {
         "williamboman/mason.nvim",
         dependencies = "williamboman/mason-lspconfig.nvim",
@@ -104,11 +57,13 @@ return {
             })
 
             local ensure, exclude_auto = {}, {}
-            for _, spec in pairs(active_specs()) do
-                vim.list_extend(ensure, spec.mason)
-                for _, pkg in ipairs(spec.mason) do
-                    if not (spec.servers and spec.servers[pkg]) then
-                        table.insert(exclude_auto, pkg)
+            for _, spec in pairs(lang.active()) do
+                if spec.lsp then
+                    vim.list_extend(ensure, spec.lsp.mason or {})
+                    for _, pkg in ipairs(spec.lsp.mason or {}) do
+                        if not (spec.lsp.servers and spec.lsp.servers[pkg]) then
+                            table.insert(exclude_auto, pkg)
+                        end
                     end
                 end
             end
@@ -120,6 +75,7 @@ return {
         end,
     },
 
+    -- LSP server configs, wired with blink.cmp capabilities.
     {
         "neovim/nvim-lspconfig",
         dependencies = { "saghen/blink.cmp" },
@@ -127,12 +83,14 @@ return {
         config = function()
             local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-            for _, spec in pairs(active_specs()) do
-                for name, cfg in pairs(spec.servers or {}) do
-                    cfg = type(cfg) == "function" and cfg() or cfg
-                    cfg.capabilities = capabilities
-                    vim.lsp.config(name, cfg)
-                    vim.lsp.enable(name)
+            for _, spec in pairs(lang.active()) do
+                if spec.lsp and spec.lsp.servers then
+                    for name, cfg in pairs(spec.lsp.servers) do
+                        cfg = type(cfg) == "function" and cfg() or cfg
+                        cfg.capabilities = capabilities
+                        vim.lsp.config(name, cfg)
+                        vim.lsp.enable(name)
+                    end
                 end
             end
 
@@ -148,6 +106,64 @@ return {
                     end, opts)
                 end,
             })
+        end,
+    },
+
+    -- Formatter: pulls per-filetype formatters from lang.lua.
+    {
+        "stevearc/conform.nvim",
+        event = "BufWritePre",
+        config = function()
+            require("conform").setup({
+                formatters_by_ft = lang.formatters_by_ft(),
+                format_on_save = {
+                    lsp_format = "fallback",
+                    timeout_ms = 2000,
+                },
+            })
+        end,
+    },
+
+    -- Rust: rustaceanvim takes over rust-analyzer (mason installs the binary).
+    {
+        "mrcjkb/rustaceanvim",
+        version = "^6",
+        lazy = false,
+        ft = { "rust" },
+        cond = function() return lang.is_enabled("rust") end,
+        init = function()
+            vim.g.rustaceanvim = {
+                tools = {
+                    code_actions = { ui_select_fallback = true },
+                },
+                server = {
+                    on_attach = function(_, bufnr)
+                        local opts = { buffer = bufnr }
+                        vim.keymap.set("n", "<leader>rca", function()
+                            vim.cmd.RustLsp("codeAction")
+                        end, vim.tbl_extend("force", opts, { desc = "Rust code action" }))
+                        vim.keymap.set("n", "K", function()
+                            vim.cmd.RustLsp({ "hover", "actions" })
+                        end, vim.tbl_extend("force", opts, { desc = "Rust hover + actions" }))
+                    end,
+                    default_settings = {
+                        ["rust-analyzer"] = {
+                            cargo = {
+                                allFeatures = true,
+                                loadOutDirsFromCheck = true,
+                                runBuildScripts = true,
+                            },
+                            checkOnSave = true,
+                            check = {
+                                command = "clippy",
+                                extraArgs = { "--no-deps" },
+                            },
+                            procMacro = { enable = true },
+                            inlayHints = { enable = true },
+                        },
+                    },
+                },
+            }
         end,
     },
 }

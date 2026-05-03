@@ -46,13 +46,3 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.opt_local.softtabstop = 2
     end,
 })
-
--- Seeting global language options
-vim.g.language = {
-    python = true,
-    rust = true,
-    lua = true,
-    json = true,
-    swift = false,
-    typescript = true,
-}

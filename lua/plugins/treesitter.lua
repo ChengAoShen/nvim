@@ -1,24 +1,12 @@
 -- requires: tree-sitter CLI (npm install -g tree-sitter-cli), gcc/clang, git
+local lang = require("lang")
+
 return {
     {
         "romus204/tree-sitter-manager.nvim",
         lazy = false,
         config = function()
-            local lang_parsers = {
-                python     = { "python" },
-                rust       = { "rust", "toml" },
-                lua        = { "lua", "luadoc" },
-                json       = { "json", "json5" },
-                typescript = { "typescript", "javascript", "tsx" },
-                swift      = { "swift" },
-                c          = { "c", "cpp" },
-            }
-            local parsers = {}
-            for lang, ps in pairs(lang_parsers) do
-                if vim.g.language[lang] then
-                    vim.list_extend(parsers, ps)
-                end
-            end
+            local parsers = lang.parsers()
 
             require("tree-sitter-manager").setup({
                 ensure_installed = parsers,
