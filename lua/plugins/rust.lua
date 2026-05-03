@@ -15,19 +15,15 @@ return {
                 },
                 server = {
                     on_attach = function(_, bufnr)
+                        -- 通用 LSP keymap 已由 plugins/lsp.lua 的 LspAttach autocmd 处理
                         local opts = { buffer = bufnr }
-                        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-                        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-                        vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-                        vim.keymap.set("n", "<space>f", function()
-                            vim.lsp.buf.format({ async = true })
-                        end, opts)
-                        vim.keymap.set("n", "<leader>a", function()
+                        -- Rust 专属：避开 <leader>a（被 claudecode 占用）
+                        vim.keymap.set("n", "<leader>rca", function()
                             vim.cmd.RustLsp("codeAction")
-                        end, opts)
+                        end, vim.tbl_extend("force", opts, { desc = "Rust code action" }))
                         vim.keymap.set("n", "K", function()
                             vim.cmd.RustLsp({ "hover", "actions" })
-                        end, opts)
+                        end, vim.tbl_extend("force", opts, { desc = "Rust hover + actions" }))
                     end,
                     default_settings = {
                         ["rust-analyzer"] = {
@@ -36,7 +32,8 @@ return {
                                 loadOutDirsFromCheck = true,
                                 runBuildScripts = true,
                             },
-                            checkOnSave = {
+                            checkOnSave = true,
+                            check = {
                                 command = "clippy",
                                 extraArgs = { "--no-deps" },
                             },
