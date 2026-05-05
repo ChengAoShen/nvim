@@ -1,19 +1,26 @@
 return {
     {
-        "folke/tokyonight.nvim",
+        "catppuccin/nvim",
+        name = "catppuccin",
         lazy = false,
         priority = 1000,
         config = function()
-            require('tokyonight').setup({
-                -- style = 'darker',
-                transparent = true,
-                styles = {
-                    sidebars = "transparent",
-                    floats = "transparent",
-                },
+            require("catppuccin").setup({
+                flavour = "mocha", -- latte / frappe / macchiato / mocha
+                transparent_background = true,
+                custom_highlights = function(colors)
+                    return {
+                        NormalFloat = { bg = "NONE" },
+                        FloatBorder = { bg = "NONE" },
+                        NormalSB = { bg = "NONE" },
+                        NvimTreeNormal = { bg = "NONE" },
+                        TelescopeNormal = { bg = "NONE" },
+                        TelescopeBorder = { bg = "NONE" },
+                    }
+                end,
             })
-            require('tokyonight').load()
-        end
+            vim.cmd.colorscheme("catppuccin")
+        end,
     },
 
     -- File icons (replaces nvim-web-devicons, provides compat layer)
@@ -34,7 +41,7 @@ return {
         "nvim-lualine/lualine.nvim",
         event = "VeryLazy",
         opts = {
-            options = { theme = "tokyonight", globalstatus = true },
+            options = { theme = "auto", globalstatus = true },
             sections = {
                 lualine_a = { "mode" },
                 lualine_b = { "branch", "diff", "diagnostics" },
