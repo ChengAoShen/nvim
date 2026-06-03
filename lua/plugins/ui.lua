@@ -8,6 +8,7 @@ return {
             require("catppuccin").setup({
                 flavour = "mocha", -- latte / frappe / macchiato / mocha
                 transparent_background = true,
+                integrations = { noice = true },
                 custom_highlights = function(colors)
                     return {
                         NormalFloat = { bg = "NONE" },
@@ -91,6 +92,9 @@ return {
             scroll = {
                 enabled = true,
             },
+            notifier = {
+                enabled = true,
+            },
             indent = {
                 enabled = true,
             },
@@ -119,6 +123,44 @@ return {
             { "<leader>/",       function() Snacks.picker.lines() end,   desc = "Search in buffer" },
             { "<C-N>",           function() Snacks.explorer() end,       desc = "Open file explorer", mode = { "n", "t" } },
         },
+    },
+
+    -- Replaces cmdline, messages and popupmenu UI; routes notifications
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+        },
+        opts = {
+            lsp = {
+                override = {
+                    ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                    ["vim.lsp.util.stylize_markdown"] = true,
+                    ["cmp.entry.get_documentation"] = true,
+                },
+            },
+            presets = {
+                bottom_search = true,         -- use a classic bottom cmdline for search
+                command_palette = true,       -- position the cmdline and popupmenu together
+                long_message_to_split = true, -- long messages will be sent to a split
+                inc_rename = false,
+                lsp_doc_border = false,
+            },
+            -- Center the command palette on screen (overrides command_palette preset's top position)
+            views = {
+                cmdline_popup = {
+                    position = { row = "50%", col = "50%" },
+                },
+            },
+        },
+    },
+
+    -- On-screen keypress display for screencasts; toggle with :Screenkey
+    {
+        "NStefan002/screenkey.nvim",
+        cmd = "Screenkey",
+        opts = {},
     },
 
 }
