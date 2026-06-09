@@ -104,6 +104,14 @@ return {
                     vim.keymap.set("n", "<space>f", function()
                         vim.lsp.buf.format({ async = true })
                     end, opts)
+                    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+                    if client and client:supports_method("textDocument/inlayHint", ev.buf) then
+                        vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+                    end
+                    vim.keymap.set("n", "<space>th", function()
+                        local is_enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf })
+                        vim.lsp.inlay_hint.enable(not is_enabled, { bufnr = ev.buf })
+                    end, { buffer = ev.buf, desc = "Toggle Inlay Hints" })
                 end,
             })
         end,

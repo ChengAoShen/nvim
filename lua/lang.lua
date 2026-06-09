@@ -121,6 +121,12 @@ M.langs = {
         lsp = { mason = {}, servers = { sourcekit = {} } },
         treesitter = { "swift" },
     },
+
+    markdown = {
+        enabled = true,
+        treesitter = { "markdown", "markdown_inline" },
+        format = { markdown = { "prettierd" } },
+    },
 }
 
 function M.is_enabled(name)
@@ -146,7 +152,6 @@ end
 -- Base formatters not tied to any language toggle.
 local base_formatters = {
     yaml = { "prettierd" },
-    markdown = { "prettierd" },
     html = { "prettierd" },
     css = { "prettierd" },
     scss = { "prettierd" },

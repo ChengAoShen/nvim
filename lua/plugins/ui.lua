@@ -163,4 +163,16 @@ return {
         opts = {},
     },
 
+    -- In-buffer markdown rendering (headings, code blocks, tables, checkboxes…)
+    -- Parsers (markdown, markdown_inline) come from lang.lua via tree-sitter-manager.
+    {
+        "MeanderingProgrammer/render-markdown.nvim",
+        ft = { "markdown" },
+        dependencies = { "echasnovski/mini.icons" },
+        opts = {},
+        keys = {
+            { "<leader>tm", function() require("render-markdown").toggle() end, desc = "Toggle markdown render" },
+        },
+    },
+
 }
