@@ -1,30 +1,10 @@
--- All language tooling: completion, mason, lspconfig, conform, schema/lazydev,
--- and rustaceanvim. Driven by the registry in lua/lang.lua.
+-- LSP infrastructure: mason installs, lspconfig wiring, schema/lazydev helpers.
+-- Driven by the registry in lua/lang.lua. Completion lives in
+-- plugins/completion.lua, formatting in plugins/format.lua, rust in
+-- plugins/rust.lua.
 local lang = require("lang")
 
 return {
-    -- Completion engine; also provides LSP capabilities used by lspconfig.
-    {
-        "saghen/blink.cmp",
-        event = "InsertEnter",
-        dependencies = { "rafamadriz/friendly-snippets" },
-        version = "1.*",
-        opts = {
-            keymap = {
-                preset = "default",
-                ["<Tab>"] = { "accept", "fallback" },
-                ["<CR>"] = { "accept", "fallback" },
-            },
-            appearance = { nerd_font_variant = "mono" },
-            completion = { documentation = { auto_show = false } },
-            sources = {
-                default = { "lsp", "path", "snippets", "buffer" },
-            },
-            fuzzy = { implementation = "prefer_rust" },
-        },
-        opts_extend = { "sources.default" },
-    },
-
     -- JSON/YAML schema catalog (consumed by jsonls).
     { "b0o/SchemaStore.nvim", lazy = true, version = false },
 
@@ -42,8 +22,8 @@ return {
 
     -- Mason: install LSP servers / formatters declared in lang.lua.
     {
-        "williamboman/mason.nvim",
-        dependencies = "williamboman/mason-lspconfig.nvim",
+        "mason-org/mason.nvim",
+        dependencies = "mason-org/mason-lspconfig.nvim",
         event = "VeryLazy",
         config = function()
             require("mason").setup({
@@ -72,6 +52,15 @@ return {
                 ensure_installed = ensure,
                 automatic_enable = { exclude = exclude_auto },
             })
+
+            -- Non-LSP tools (formatters etc.) from lang.lua.
+            local registry = require("mason-registry")
+            registry.refresh(function()
+                for _, tool in ipairs(lang.tools()) do
+                    local ok, pkg = pcall(registry.get_package, tool)
+                    if ok and not pkg:is_installed() then pkg:install() end
+                end
+            end)
         end,
     },
 
@@ -97,81 +86,22 @@ return {
             vim.api.nvim_create_autocmd("LspAttach", {
                 group = vim.api.nvim_create_augroup("UserLspConfig", {}),
                 callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-                    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-                    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-                    vim.keymap.set("n", "<space>f", function()
-                        vim.lsp.buf.format({ async = true })
-                    end, opts)
+                    local function map(lhs, rhs, desc)
+                        vim.keymap.set("n", lhs, rhs, { buffer = ev.buf, desc = desc })
+                    end
+                    map("gD", vim.lsp.buf.declaration, "Go to declaration")
+                    map("gd", vim.lsp.buf.definition, "Go to definition")
+                    map("<C-k>", vim.lsp.buf.signature_help, "Signature help")
                     local client = vim.lsp.get_client_by_id(ev.data.client_id)
                     if client and client:supports_method("textDocument/inlayHint", ev.buf) then
                         vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
                     end
-                    vim.keymap.set("n", "<space>th", function()
+                    map("<leader>th", function()
                         local is_enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf })
                         vim.lsp.inlay_hint.enable(not is_enabled, { bufnr = ev.buf })
-                    end, { buffer = ev.buf, desc = "Toggle Inlay Hints" })
+                    end, "Toggle inlay hints")
                 end,
             })
-        end,
-    },
-
-    -- Formatter: pulls per-filetype formatters from lang.lua.
-    {
-        "stevearc/conform.nvim",
-        event = "BufWritePre",
-        config = function()
-            require("conform").setup({
-                formatters_by_ft = lang.formatters_by_ft(),
-                format_on_save = {
-                    lsp_format = "fallback",
-                    timeout_ms = 2000,
-                },
-            })
-        end,
-    },
-
-    -- Rust: rustaceanvim takes over rust-analyzer (mason installs the binary).
-    {
-        "mrcjkb/rustaceanvim",
-        version = "^6",
-        lazy = false,
-        ft = { "rust" },
-        cond = function() return lang.is_enabled("rust") end,
-        init = function()
-            vim.g.rustaceanvim = {
-                tools = {
-                    code_actions = { ui_select_fallback = true },
-                },
-                server = {
-                    on_attach = function(_, bufnr)
-                        local opts = { buffer = bufnr }
-                        vim.keymap.set("n", "<leader>rca", function()
-                            vim.cmd.RustLsp("codeAction")
-                        end, vim.tbl_extend("force", opts, { desc = "Rust code action" }))
-                        vim.keymap.set("n", "K", function()
-                            vim.cmd.RustLsp({ "hover", "actions" })
-                        end, vim.tbl_extend("force", opts, { desc = "Rust hover + actions" }))
-                    end,
-                    default_settings = {
-                        ["rust-analyzer"] = {
-                            cargo = {
-                                allFeatures = true,
-                                loadOutDirsFromCheck = true,
-                                runBuildScripts = true,
-                            },
-                            checkOnSave = true,
-                            check = {
-                                command = "clippy",
-                                extraArgs = { "--no-deps" },
-                            },
-                            procMacro = { enable = true },
-                            inlayHints = { enable = true },
-                        },
-                    },
-                },
-            }
         end,
     },
 }

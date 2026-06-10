@@ -8,6 +8,7 @@
 --                  from mason-lspconfig automatic_enable.
 --   treesitter   = list of parser names
 --   format       = { [filetype] = { formatters... } }
+--   tools        = list of extra mason packages (formatters etc.)
 local M = {}
 
 M.langs = {
@@ -149,6 +150,9 @@ function M.parsers()
     return out
 end
 
+-- Non-LSP mason packages needed by base_formatters below.
+local base_tools = { "prettierd" }
+
 -- Base formatters not tied to any language toggle.
 local base_formatters = {
     yaml = { "prettierd" },
@@ -157,6 +161,24 @@ local base_formatters = {
     scss = { "prettierd" },
     less = { "prettierd" },
 }
+
+-- Deduplicated mason packages (formatters etc.) beyond LSP servers.
+function M.tools()
+    local seen, out = {}, {}
+    local function add(list)
+        for _, tool in ipairs(list or {}) do
+            if not seen[tool] then
+                seen[tool] = true
+                table.insert(out, tool)
+            end
+        end
+    end
+    add(base_tools)
+    for _, spec in pairs(M.active()) do
+        add(spec.tools)
+    end
+    return out
+end
 
 function M.formatters_by_ft()
     local out = vim.deepcopy(base_formatters)
