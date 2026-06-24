@@ -74,11 +74,12 @@ M.langs = {
         },
         treesitter = { "typescript", "javascript", "tsx" },
         format = {
-            javascript = { "prettierd" },
-            javascriptreact = { "prettierd" },
-            typescript = { "prettierd" },
-            typescriptreact = { "prettierd" },
+            javascript = { "biome" },
+            javascriptreact = { "biome" },
+            typescript = { "biome" },
+            typescriptreact = { "biome" },
         },
+        tools = { "biome" },
     },
 
     json = {
@@ -101,9 +102,10 @@ M.langs = {
         },
         treesitter = { "json", "json5" },
         format = {
-            json = { "prettierd" },
-            jsonc = { "prettierd" },
+            json = { "biome" },
+            jsonc = { "biome" },
         },
+        tools = { "biome" },
     },
 
     c = {
@@ -126,7 +128,8 @@ M.langs = {
     markdown = {
         enabled = true,
         treesitter = { "markdown", "markdown_inline" },
-        format = { markdown = { "prettierd" } },
+        format = { markdown = { "dprint" } },
+        tools = { "dprint" },
     },
 }
 
@@ -151,15 +154,15 @@ function M.parsers()
 end
 
 -- Non-LSP mason packages needed by base_formatters below.
-local base_tools = { "prettierd" }
+local base_tools = { "biome", "dprint" }
 
 -- Base formatters not tied to any language toggle.
 local base_formatters = {
-    yaml = { "prettierd" },
-    html = { "prettierd" },
-    css = { "prettierd" },
-    scss = { "prettierd" },
-    less = { "prettierd" },
+    yaml = { "dprint" },
+    html = { "biome" },
+    css = { "biome" },
+    scss = { "dprint" },
+    less = { "dprint" },
 }
 
 -- Deduplicated mason packages (formatters etc.) beyond LSP servers.
