@@ -20,7 +20,7 @@ return {
         config = true,
     },
 
-    -- Highlight TODO/FIXME comments (picker via snacks)
+    -- Highlight TODOFIXME comments (picker via snacks)
     {
         "folke/todo-comments.nvim",
         event = "BufReadPost",
@@ -56,7 +56,13 @@ return {
     {
         "folke/flash.nvim",
         lazy = true,
-        config = true,
+        opts = {
+            -- Inline labels with priority below inlay hints (default 4096),
+            -- so labels render right after the match instead of after the
+            -- LSP type annotation.
+            label = { style = "inline" },
+            highlight = { priority = 1000 },
+        },
         keys = {
             { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
             { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
