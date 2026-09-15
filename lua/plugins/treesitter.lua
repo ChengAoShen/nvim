@@ -16,7 +16,10 @@ return {
             -- (markdown_inline, luadoc).
             vim.api.nvim_create_autocmd("FileType", {
                 callback = function(ev)
-                    if not pcall(vim.treesitter.get_parser, ev.buf) then return end
+                    -- get_parser returns nil (rather than erroring) when no
+                    -- parser is installed, so the pcall alone is not a guard.
+                    local ok, parser = pcall(vim.treesitter.get_parser, ev.buf)
+                    if not ok or not parser then return end
                     vim.wo[0][0].foldmethod = "expr"
                     vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
                     vim.wo[0][0].foldlevel = 99
