@@ -30,6 +30,10 @@ opt.splitbelow = true
 opt.exrc = true
 opt.cursorline = true
 opt.autoread = true
+-- Open files fully unfolded. Folds come from treesitter (plugins/treesitter.lua)
+-- or a filetype's own foldexpr (e.g. VimTeX); without this, Neovim's default
+-- foldlevel=0 closes every one of them on open.
+opt.foldlevelstart = 99
 
 vim.o.guifont = "FiraCode Nerd Font Mono:h18"
 
