@@ -9,7 +9,8 @@
 -- latexindent settings, passed inline with -y instead of a YAML file.
 -- Nested keys use colon paths; entries are comma separated.
 local latexindent_settings = table.concat({
-    -- Match the editor's expandtab/shiftwidth=4 rather than latexindent's tab.
+    -- latexindent's own default is a literal tab; use the editor's
+    -- expandtab/shiftwidth=4 instead so formatting matches what typing gives.
     "defaultIndent:'    '",
     -- Matches textwidth/colorcolumn=88 in config/options.lua.
     "modifyLineBreaks:textWrapOptions:columns:88",
@@ -41,6 +42,11 @@ return {
                         build = { onSave = false, forwardSearchAfter = false },
                         chktex = { onOpenAndSave = true, onEdit = false },
                         diagnosticsDelay = 300,
+                        diagnostics = {
+                            ignoredPatterns = {
+                                "Delete this space to maintain correct pagereferences\\.",
+                            },
+                        },
                     },
                 },
             },
@@ -116,19 +122,30 @@ return {
                 -- files. Keep `K` = hover everywhere; texdoc moves to `gK`.
                 vim.g.vimtex_mappings_disable = { n = { "K" } }
 
-                vim.g.vimtex_syntax_conceal = {
-                    accents = 1,
-                    cites = 1,
-                    fancy = 1,
-                    greek = 1,
-                    math_bounds = 1,
-                    math_delimiters = 1,
-                    math_fracs = 1,
-                    math_super_sub = 1,
-                    math_symbols = 1,
-                    sections = 0,
-                    styles = 1,
+                -- latexmk -c leaves a few generators' droppings behind
+                -- (beamer, biber, minted, synctex). Name them so `:VimtexClean`
+                -- and the quit hook below remove them too. The PDF is never
+                -- touched; only `:VimtexCleanFull` deletes that.
+                vim.g.vimtex_compiler_clean_paths = {
+                    "*.synctex.gz",
+                    "*.bbl",
+                    "*.nav",
+                    "*.snm",
+                    "*.vrb",
+                    "*.run.xml",
+                    "*.bcf",
+                    "_minted-*",
                 }
+
+                -- Closing the last window on a document cleans up after it, so
+                -- the source directory only ever holds sources and the PDF.
+                vim.api.nvim_create_autocmd("User", {
+                    pattern = "VimtexEventQuit",
+                    group = vim.api.nvim_create_augroup("UserTexClean", { clear = true }),
+                    callback = function()
+                        vim.fn["vimtex#compiler#clean"](0)
+                    end,
+                })
 
                 vim.g.vimtex_fold_enabled = 1
                 vim.g.vimtex_indent_enabled = 1
@@ -142,9 +159,16 @@ return {
                             buffer = true,
                             desc = "Open package docs (texdoc)",
                         })
-                        -- Reveal the raw markup only on the cursor line.
-                        vim.wo[0][0].conceallevel = 2
+                        -- Neovim's default: show the source as written, no
+                        -- substituting \alpha with a glyph or hiding \frac
+                        -- braces. VimTeX's conceal rules stay loaded so
+                        -- `<leader>tc` can switch to the rendered view.
+                        vim.wo[0][0].conceallevel = 0
                         vim.wo[0][0].concealcursor = ""
+                        vim.keymap.set("n", "<leader>tc", function()
+                            local w = vim.wo[0][0]
+                            w.conceallevel = w.conceallevel == 0 and 2 or 0
+                        end, { buffer = true, desc = "Toggle conceal (raw LaTeX)" })
                         vim.wo[0][0].spell = true
                         vim.bo.spelllang = "en_us"
                         vim.wo[0][0].wrap = true
