@@ -1,13 +1,3 @@
--- 2-space indent for JS/TS/JSON
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "javascript", "typescript", "json" },
-    callback = function()
-        vim.opt_local.tabstop = 2
-        vim.opt_local.shiftwidth = 2
-        vim.opt_local.softtabstop = 2
-    end,
-})
-
 -- Autosave on InsertLeave (real, writable, modified file buffers only)
 vim.api.nvim_create_autocmd("InsertLeave", {
     callback = function()
@@ -31,4 +21,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
     pattern = "*",
     command = "checktime",
+})
+
+-- 2-space indent for JS/TS/JSON
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "javascript", "typescript", "json" },
+    callback = function()
+        vim.opt_local.tabstop = 2
+        vim.opt_local.shiftwidth = 2
+        vim.opt_local.softtabstop = 2
+    end,
 })

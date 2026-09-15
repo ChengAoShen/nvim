@@ -92,14 +92,16 @@ return {
                     map("gD", vim.lsp.buf.declaration, "Go to declaration")
                     map("gd", vim.lsp.buf.definition, "Go to definition")
                     map("<C-k>", vim.lsp.buf.signature_help, "Signature help")
-                    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-                    if client and client:supports_method("textDocument/inlayHint", ev.buf) then
-                        vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
-                    end
+                    -- Inlay hints stay off by default; <leader>th turns them on
+                    -- for the current buffer, <leader>tH for every buffer.
                     map("<leader>th", function()
-                        local is_enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf })
-                        vim.lsp.inlay_hint.enable(not is_enabled, { bufnr = ev.buf })
-                    end, "Toggle inlay hints")
+                        local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf })
+                        vim.lsp.inlay_hint.enable(not enabled, { bufnr = ev.buf })
+                    end, "Toggle inlay hints (buffer)")
+                    map("<leader>tH", function()
+                        local enabled = vim.lsp.inlay_hint.is_enabled()
+                        vim.lsp.inlay_hint.enable(not enabled)
+                    end, "Toggle inlay hints (global)")
                 end,
             })
         end,

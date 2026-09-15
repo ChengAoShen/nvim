@@ -53,6 +53,7 @@ return {
             { "<leader>j", function() require("smart-splits").move_cursor_down() end,  mode = "n", desc = "Move to split below" },
             { "<leader>k", function() require("smart-splits").move_cursor_up() end,    mode = "n", desc = "Move to split above" },
             { "<leader>l", function() require("smart-splits").move_cursor_right() end, mode = "n", desc = "Move to right split" },
+            -- Other option
             { "<C-h>",     function() require("smart-splits").move_cursor_left() end,  mode = "t", desc = "Move to left split" },
             { "<C-j>",     function() require("smart-splits").move_cursor_down() end,  mode = "t", desc = "Move to split below" },
             { "<C-k>",     function() require("smart-splits").move_cursor_up() end,    mode = "t", desc = "Move to split above" },
