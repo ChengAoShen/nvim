@@ -114,9 +114,30 @@ M.langs = {
         treesitter = { "c", "cpp" },
     },
 
+    -- VimTeX (plugins/tex.lua) owns building/viewing/syntax; texlab provides
+    -- completion, references and diagnostics. Deliberately no treesitter
+    -- parser: it would shadow VimTeX's syntax and kill its conceal.
     tex = {
-        enabled = false,
-        lsp = { mason = {}, servers = { texlab = {} } },
+        enabled = true,
+        lsp = {
+            mason = { "texlab" },
+            servers = {
+                texlab = {
+                    settings = {
+                        texlab = {
+                            -- VimTeX drives latexmk; texlab must not also build.
+                            build = { onSave = false, forwardSearchAfter = false },
+                            chktex = { onOpenAndSave = true, onEdit = false },
+                            diagnosticsDelay = 300,
+                        },
+                    },
+                },
+            },
+        },
+        format = { tex = { "latexindent" } },
+        -- MacTeX's own latexindent is broken (missing Perl File::HomeDir);
+        -- mason ships a self-contained build and its bin dir wins on PATH.
+        tools = { "latexindent" },
     },
 
     swift = {
