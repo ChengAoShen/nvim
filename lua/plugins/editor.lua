@@ -44,11 +44,19 @@ return {
     {
         "mrjones2014/smart-splits.nvim",
         lazy = true,
+        -- Terminal mode uses <C-hjkl>, not <leader>hjkl: the leader is <Space>,
+        -- so a `t`-mode <leader>h mapping turns every space typed in a terminal
+        -- into a 'timeoutlen' wait, and swallows it outright when the next
+        -- keystroke is h/j/k/l (" how", " list", " just"...).
         keys = {
-            { "<leader>h", function() require("smart-splits").move_cursor_left() end,  mode = { "n", "t" } },
-            { "<leader>j", function() require("smart-splits").move_cursor_down() end,  mode = { "n", "t" } },
-            { "<leader>k", function() require("smart-splits").move_cursor_up() end,    mode = { "n", "t" } },
-            { "<leader>l", function() require("smart-splits").move_cursor_right() end, mode = { "n", "t" } },
+            { "<leader>h", function() require("smart-splits").move_cursor_left() end,  mode = "n", desc = "Move to left split" },
+            { "<leader>j", function() require("smart-splits").move_cursor_down() end,  mode = "n", desc = "Move to split below" },
+            { "<leader>k", function() require("smart-splits").move_cursor_up() end,    mode = "n", desc = "Move to split above" },
+            { "<leader>l", function() require("smart-splits").move_cursor_right() end, mode = "n", desc = "Move to right split" },
+            { "<C-h>",     function() require("smart-splits").move_cursor_left() end,  mode = "t", desc = "Move to left split" },
+            { "<C-j>",     function() require("smart-splits").move_cursor_down() end,  mode = "t", desc = "Move to split below" },
+            { "<C-k>",     function() require("smart-splits").move_cursor_up() end,    mode = "t", desc = "Move to split above" },
+            { "<C-l>",     function() require("smart-splits").move_cursor_right() end, mode = "t", desc = "Move to right split" },
         },
     },
 
