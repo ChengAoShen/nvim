@@ -1,26 +1,11 @@
--- LSP infrastructure: mason installs, lspconfig wiring, schema/lazydev helpers.
--- Driven by the registry in lua/lang.lua. Completion lives in
--- plugins/completion.lua, formatting in plugins/format.lua, rust in
--- plugins/rust.lua.
+-- LSP infrastructure only: mason installs and lspconfig wiring, driven by
+-- the per-language specs in lua/langs/. Language-specific plugins and
+-- settings live in those files; completion is in plugins/completion.lua and
+-- formatting in plugins/format.lua.
 local lang = require("lang")
 
 return {
-    -- JSON/YAML schema catalog (consumed by jsonls).
-    { "b0o/SchemaStore.nvim", lazy = true, version = false },
-
-    -- Neovim Lua dev: inject runtime libs and `vim` globals into lua_ls.
-    {
-        "folke/lazydev.nvim",
-        ft = "lua",
-        cond = function() return lang.is_enabled("lua") end,
-        opts = {
-            library = {
-                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-            },
-        },
-    },
-
-    -- Mason: install LSP servers / formatters declared in lang.lua.
+    -- Mason: install LSP servers / formatters declared in lua/langs/.
     {
         "mason-org/mason.nvim",
         dependencies = "mason-org/mason-lspconfig.nvim",
@@ -53,7 +38,7 @@ return {
                 automatic_enable = { exclude = exclude_auto },
             })
 
-            -- Non-LSP tools (formatters etc.) from lang.lua.
+            -- Non-LSP tools (formatters etc.) from lua/langs/.
             local registry = require("mason-registry")
             registry.refresh(function()
                 for _, tool in ipairs(lang.tools()) do

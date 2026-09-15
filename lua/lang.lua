@@ -1,5 +1,7 @@
--- Single source of truth for per-language tooling.
--- Each entry under M.langs may define:
+-- Aggregates the per-language specs in lua/langs/. One file per language;
+-- deleting a file removes that language's tooling entirely.
+--
+-- Each langs/*.lua returns a table that may define:
 --   enabled      = boolean
 --   lsp.mason    = list of mason package names to install
 --   lsp.servers  = { [server_name] = config | function() return config end }
@@ -7,152 +9,22 @@
 --                  (e.g. rust_analyzer, owned by rustaceanvim) are excluded
 --                  from mason-lspconfig automatic_enable.
 --   treesitter   = list of parser names
---   format       = { [filetype] = { formatters... } }
+--   format       = { [filetype] = { formatter names... } }
+--   formatters   = { [name] = conform formatter definition }  -- overrides
 --   tools        = list of extra mason packages (formatters etc.)
+--   plugins      = list of lazy.nvim plugin specs for this language
 local M = {}
 
-M.langs = {
-    python = {
-        enabled = true,
-        lsp = {
-            mason = { "ruff", "ty" },
-            servers = {
-                ruff = {
-                    on_attach = function(client, _)
-                        -- Defer hover to ty to avoid duplicates
-                        client.server_capabilities.hoverProvider = false
-                    end,
-                },
-                ty = {},
-            },
-        },
-        treesitter = { "python" },
-        format = { python = { "ruff_organize_imports", "ruff_format" } },
-    },
+local function load_langs()
+    local out = {}
+    for _, path in ipairs(vim.api.nvim_get_runtime_file("lua/langs/*.lua", true)) do
+        local name = vim.fn.fnamemodify(path, ":t:r")
+        out[name] = require("langs." .. name)
+    end
+    return out
+end
 
-    rust = {
-        enabled = true,
-        -- rust_analyzer owned by rustaceanvim; mason still installs it.
-        lsp = {
-            mason = { "rust_analyzer", "taplo" },
-            servers = { taplo = {} },
-        },
-        treesitter = { "rust", "toml" },
-    },
-
-    lua = {
-        enabled = true,
-        lsp = {
-            mason = { "lua_ls" },
-            servers = {
-                lua_ls = {
-                    settings = { Lua = { diagnostics = { globals = { "vim" } } } },
-                },
-            },
-        },
-        treesitter = { "lua", "luadoc" },
-    },
-
-    typescript = {
-        enabled = true,
-        lsp = {
-            mason = { "vtsls" },
-            servers = {
-                vtsls = {
-                    settings = {
-                        typescript = {
-                            inlayHints = {
-                                parameterNames = { enabled = "literals" },
-                                variableTypes = { enabled = false },
-                                propertyDeclarationTypes = { enabled = true },
-                                functionLikeReturnTypes = { enabled = true },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-        treesitter = { "typescript", "javascript", "tsx" },
-        format = {
-            javascript = { "biome" },
-            javascriptreact = { "biome" },
-            typescript = { "biome" },
-            typescriptreact = { "biome" },
-        },
-        tools = { "biome" },
-    },
-
-    json = {
-        enabled = true,
-        lsp = {
-            mason = { "jsonls" },
-            servers = {
-                jsonls = function()
-                    local ok, ss = pcall(require, "schemastore")
-                    return {
-                        settings = {
-                            json = {
-                                schemas = ok and ss.json.schemas() or nil,
-                                validate = { enable = true },
-                            },
-                        },
-                    }
-                end,
-            },
-        },
-        treesitter = { "json", "json5" },
-        format = {
-            json = { "biome" },
-            jsonc = { "biome" },
-        },
-        tools = { "biome" },
-    },
-
-    c = {
-        enabled = false,
-        lsp = { mason = { "clangd" }, servers = { clangd = {} } },
-        treesitter = { "c", "cpp" },
-    },
-
-    -- VimTeX (plugins/tex.lua) owns building/viewing/syntax; texlab provides
-    -- completion, references and diagnostics. Deliberately no treesitter
-    -- parser: it would shadow VimTeX's syntax and kill its conceal.
-    tex = {
-        enabled = true,
-        lsp = {
-            mason = { "texlab" },
-            servers = {
-                texlab = {
-                    settings = {
-                        texlab = {
-                            -- VimTeX drives latexmk; texlab must not also build.
-                            build = { onSave = false, forwardSearchAfter = false },
-                            chktex = { onOpenAndSave = true, onEdit = false },
-                            diagnosticsDelay = 300,
-                        },
-                    },
-                },
-            },
-        },
-        format = { tex = { "latexindent" } },
-        -- MacTeX's own latexindent is broken (missing Perl File::HomeDir);
-        -- mason ships a self-contained build and its bin dir wins on PATH.
-        tools = { "latexindent" },
-    },
-
-    swift = {
-        enabled = false,
-        lsp = { mason = {}, servers = { sourcekit = {} } },
-        treesitter = { "swift" },
-    },
-
-    markdown = {
-        enabled = true,
-        treesitter = { "markdown", "markdown_inline" },
-        format = { markdown = { "dprint" } },
-        tools = { "dprint" },
-    },
-}
+M.langs = load_langs()
 
 function M.is_enabled(name)
     return M.langs[name] and M.langs[name].enabled or false
@@ -170,6 +42,15 @@ function M.parsers()
     local out = {}
     for _, spec in pairs(M.active()) do
         if spec.treesitter then vim.list_extend(out, spec.treesitter) end
+    end
+    return out
+end
+
+-- lazy.nvim specs contributed by enabled languages (see plugins/langs.lua).
+function M.plugins()
+    local out = {}
+    for _, spec in pairs(M.active()) do
+        if spec.plugins then vim.list_extend(out, spec.plugins) end
     end
     return out
 end
@@ -210,6 +91,20 @@ function M.formatters_by_ft()
         if spec.format then
             for ft, fmts in pairs(spec.format) do
                 out[ft] = fmts
+            end
+        end
+    end
+    return out
+end
+
+-- conform formatter definitions contributed by enabled languages, merged into
+-- the shared ones in plugins/format.lua.
+function M.formatters()
+    local out = {}
+    for _, spec in pairs(M.active()) do
+        if spec.formatters then
+            for name, def in pairs(spec.formatters) do
+                out[name] = def
             end
         end
     end
