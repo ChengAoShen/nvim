@@ -4,14 +4,13 @@ opt.tabstop = 4
 opt.shiftwidth = 4
 opt.expandtab = true
 opt.shiftround = true
-opt.autoindent = true
 opt.smartindent = true
 opt.number = true
 opt.relativenumber = true
-opt.wildmenu = true
 opt.ignorecase = true
 opt.smartcase = true
 opt.completeopt = { "menu", "menuone", "noselect" }
+-- Colours and highlight groups are owned by config/colors.lua.
 opt.termguicolors = true
 opt.signcolumn = "yes"
 opt.swapfile = false
@@ -23,13 +22,11 @@ opt.textwidth = 88
 opt.colorcolumn = "88"
 opt.mouse = "a"
 opt.undofile = true
-opt.undodir = vim.fn.expand("$HOME/.local/share/nvim/undo")
 opt.clipboard:append("unnamedplus")
 opt.splitright = true
 opt.splitbelow = true
 opt.exrc = true
 opt.cursorline = true
-opt.autoread = true
 -- Open files fully unfolded. Folds come from treesitter (plugins/treesitter.lua)
 -- or a filetype's own foldexpr (e.g. VimTeX); without this, Neovim's default
 -- foldlevel=0 closes every one of them on open.

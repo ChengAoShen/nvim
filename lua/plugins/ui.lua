@@ -1,27 +1,11 @@
 return {
+    -- Colorscheme. Every colour decision lives in config/colors.lua.
     {
         "catppuccin/nvim",
         name = "catppuccin",
         lazy = false,
         priority = 1000,
-        config = function()
-            require("catppuccin").setup({
-                flavour = "mocha", -- latte / frappe / macchiato / mocha
-                transparent_background = true,
-                integrations = { noice = true },
-                custom_highlights = function(colors)
-                    return {
-                        NormalFloat = { bg = "NONE" },
-                        FloatBorder = { bg = "NONE" },
-                        NormalSB = { bg = "NONE" },
-                        NvimTreeNormal = { bg = "NONE" },
-                        TelescopeNormal = { bg = "NONE" },
-                        TelescopeBorder = { bg = "NONE" },
-                    }
-                end,
-            })
-            vim.cmd.colorscheme("catppuccin")
-        end,
+        config = function() require("config.colors").setup() end,
     },
 
     -- File icons (replaces nvim-web-devicons, provides compat layer)
@@ -42,7 +26,14 @@ return {
         "nvim-lualine/lualine.nvim",
         event = "VeryLazy",
         opts = {
-            options = { theme = "auto", globalstatus = true },
+            options = {
+                theme = "auto",
+                globalstatus = true,
+                -- Keep the tabline hidden until a second tabpage exists.
+                always_show_tabline = false,
+                section_separators = { left = "", right = "" },
+                component_separators = { left = "", right = "" },
+            },
             sections = {
                 lualine_a = { "mode" },
                 lualine_b = { "branch", "diff", "diagnostics" },
@@ -50,6 +41,24 @@ return {
                 lualine_x = { "encoding", "fileformat", "filetype" },
                 lualine_y = { "progress" },
                 lualine_z = { "location" },
+            },
+            tabline = {
+                lualine_a = {
+                    {
+                        "tabs",
+                        mode = 2, -- tab number + filename
+                        path = 0, -- filename only, no directories
+                        tab_max_length = 24,
+                        symbols = { modified = " ●" },
+                    },
+                },
+                lualine_z = {
+                    {
+                        function()
+                            return " " .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+                        end,
+                    },
+                },
             },
         },
     },
@@ -172,5 +181,4 @@ return {
         cmd = "Screenkey",
         opts = {},
     },
-
 }

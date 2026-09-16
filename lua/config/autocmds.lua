@@ -17,7 +17,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
 })
 
--- Reload externally-modified files (autoread is set in options.lua)
+-- Reload externally-modified files ('autoread' is on by default)
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
     pattern = "*",
     command = "checktime",
