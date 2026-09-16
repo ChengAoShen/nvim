@@ -115,13 +115,24 @@ return {
             },
         },
         keys = {
-            { "<leader>ff",      function() Snacks.picker.files() end,   desc = "Find files" },
-            { "<leader>fg",      function() Snacks.picker.grep() end,    desc = "Live grep" },
-            { "<leader><space>", function() Snacks.picker.buffers() end, desc = "Buffers" },
-            { "<leader>fh",      function() Snacks.picker.help() end,    desc = "Help tags" },
-            { "<leader>?",       function() Snacks.picker.recent() end,  desc = "Recent files" },
-            { "<leader>/",       function() Snacks.picker.lines() end,   desc = "Search in buffer" },
-            { "<C-N>",           function() Snacks.explorer() end,       desc = "Open file explorer", mode = { "n", "t" } },
+            { "<leader>ff",      function() Snacks.picker.files() end,        desc = "Find files" },
+            { "<leader>fg",      function() Snacks.picker.grep() end,         desc = "Live grep" },
+            { "<leader><space>", function() Snacks.picker.buffers() end,      desc = "Buffers" },
+            { "<leader>fh",      function() Snacks.picker.help() end,         desc = "Help tags" },
+            { "<leader>?",       function() Snacks.picker.recent() end,       desc = "Recent files" },
+            { "<leader>/",       function() Snacks.picker.lines() end,        desc = "Search in buffer" },
+            { "<C-N>",           function() Snacks.explorer() end,            desc = "Open file explorer",  mode = { "n", "t" } },
+
+            --terminal
+            { "<C-\\>",          function() Snacks.terminal.toggle() end,     desc = "Toggle terminal",     mode = { "n", "t" } },
+            { "<leader>tt",      function() Snacks.terminal() end,            desc = "New terminal" },
+
+            -- git
+            { "<leader>gg",      function() Snacks.lazygit() end,             desc = "Lazygit" },
+            { "<leader>gf",      function() Snacks.lazygit.log_file() end,    desc = "Lazygit file history" },
+            { "<leader>gl",      function() Snacks.lazygit.log() end,         desc = "Lazygit log" },
+            { "<leader>gb",      function() Snacks.picker.git_log_line() end, desc = "Git blame line" },
+            { "<leader>gs",      function() Snacks.picker.git_status() end,   desc = "Git status" },
         },
     },
 
