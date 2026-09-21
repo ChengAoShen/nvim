@@ -7,17 +7,16 @@
 -- syntax and disable conceal.
 
 -- latexindent settings, passed inline with -y instead of a YAML file.
--- Nested keys use colon paths; entries are comma separated.
-local latexindent_settings = table.concat({
-    -- latexindent's own default is a literal tab; use the editor's
-    -- expandtab/shiftwidth=4 instead so formatting matches what typing gives.
-    "defaultIndent:'    '",
-    -- Matches textwidth/colorcolumn=88 in config/options.lua.
-    "modifyLineBreaks:textWrapOptions:columns:88",
-    -- `overflow` forbids mid-word breaks: a token longer than the limit
-    -- (a long \url, say) gets its own line and is left intact.
-    "modifyLineBreaks:textWrapOptions:huge:overflow",
-}, ",")
+--
+-- Indentation only: no -m, so latexindent never moves a line break. Line
+-- length is the editor's job -- textwidth=88 with formatoptions+=t already
+-- hard-wraps prose as it is typed, and `gqip` reflows a paragraph on demand.
+-- Letting latexindent wrap instead (modifyLineBreaks + textWrapOptions) meant
+-- every save reflowed the whole file, which joins lines that must stand alone:
+-- several `\input` on one line hides all but the first from VimTeX's parser
+-- (breaking Skim inverse search), and `\centering`/`\includegraphics` get
+-- glued to their `\begin{figure}`.
+local latexindent_settings = "defaultIndent:'    '"
 
 -- MacTeX ships a latexindent that cannot run (its Perl File::HomeDir
 -- dependency is absent on macOS). Point at mason's self-contained build
@@ -26,8 +25,9 @@ local latexindent_settings = table.concat({
 local mason_latexindent = vim.fn.stdpath("data") .. "/mason/bin/latexindent"
 
 local function latexindent_args()
-    -- -m enables modifyLineBreaks, without which textWrapOptions is ignored.
-    return { "-y", latexindent_settings, "-m", "-" }
+    -- -g discards the indent.log latexindent otherwise drops in the cwd on
+    -- every format.
+    return { "-y", latexindent_settings, "-g", "/dev/null", "-" }
 end
 
 return {
