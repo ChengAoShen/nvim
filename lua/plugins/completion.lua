@@ -1,5 +1,5 @@
 return {
-    -- Completion engine; provides the LSP capabilities consumed in plugins/lsp.lua.
+    -- Also the source of the LSP capabilities used in plugins/lsp.lua.
     {
         "saghen/blink.cmp",
         event = "InsertEnter",

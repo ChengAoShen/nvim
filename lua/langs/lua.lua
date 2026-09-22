@@ -9,8 +9,10 @@ return {
         },
     },
     treesitter = { "lua", "luadoc" },
+    format = { lua = { "stylua" } },
+    tools = { "stylua" },
     plugins = {
-        -- Neovim Lua dev: inject runtime libs and `vim` globals into lua_ls.
+        -- Injects Neovim runtime libs and the `vim` global into lua_ls.
         {
             "folke/lazydev.nvim",
             ft = "lua",

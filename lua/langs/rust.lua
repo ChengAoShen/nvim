@@ -20,12 +20,30 @@ return {
                     server = {
                         on_attach = function(_, bufnr)
                             local opts = { buffer = bufnr }
-                            vim.keymap.set("n", "<leader>rca", function()
-                                vim.cmd.RustLsp("codeAction")
-                            end, vim.tbl_extend("force", opts, { desc = "Rust code action" }))
-                            vim.keymap.set("n", "K", function()
-                                vim.cmd.RustLsp({ "hover", "actions" })
-                            end, vim.tbl_extend("force", opts, { desc = "Rust hover + actions" }))
+                            vim.keymap.set(
+                                "n",
+                                "<leader>rca",
+                                function()
+                                    vim.cmd.RustLsp("codeAction")
+                                end,
+                                vim.tbl_extend(
+                                    "force",
+                                    opts,
+                                    { desc = "Rust code action" }
+                                )
+                            )
+                            vim.keymap.set(
+                                "n",
+                                "K",
+                                function()
+                                    vim.cmd.RustLsp({ "hover", "actions" })
+                                end,
+                                vim.tbl_extend(
+                                    "force",
+                                    opts,
+                                    { desc = "Rust hover + actions" }
+                                )
+                            )
                         end,
                         default_settings = {
                             ["rust-analyzer"] = {

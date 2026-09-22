@@ -1,0 +1,4 @@
+# stylua defaults to tabs; this config is 4-space indented (see options.lua).
+indent_type = "Spaces"
+indent_width = 4
+column_width = 88

@@ -1,11 +1,8 @@
--- LSP infrastructure only: mason installs and lspconfig wiring, driven by
--- the per-language specs in lua/langs/. Language-specific plugins and
--- settings live in those files; completion is in plugins/completion.lua and
--- formatting in plugins/format.lua.
+-- LSP infrastructure only; what to install and how to configure it comes from
+-- lua/langs/. Completion: plugins/completion.lua. Formatting: plugins/format.lua.
 local lang = require("lang")
 
 return {
-    -- Mason: install LSP servers / formatters declared in lua/langs/.
     {
         "mason-org/mason.nvim",
         dependencies = "mason-org/mason-lspconfig.nvim",
@@ -21,35 +18,33 @@ return {
                 },
             })
 
-            local ensure, exclude_auto = {}, {}
+            local servers = {}
             for _, spec in pairs(lang.active()) do
-                if spec.lsp then
-                    vim.list_extend(ensure, spec.lsp.mason or {})
-                    for _, pkg in ipairs(spec.lsp.mason or {}) do
-                        if not (spec.lsp.servers and spec.lsp.servers[pkg]) then
-                            table.insert(exclude_auto, pkg)
-                        end
-                    end
-                end
+                vim.list_extend(servers, spec.lsp and spec.lsp.mason or {})
             end
 
+            -- automatic_enable off: every server is enabled explicitly below,
+            -- and some packages are started by another plugin instead
+            -- (rust_analyzer belongs to rustaceanvim).
             require("mason-lspconfig").setup({
-                ensure_installed = ensure,
-                automatic_enable = { exclude = exclude_auto },
+                ensure_installed = servers,
+                automatic_enable = false,
             })
 
-            -- Non-LSP tools (formatters etc.) from lua/langs/.
+            -- Formatters and other non-LSP packages; mason-lspconfig only
+            -- knows about servers.
             local registry = require("mason-registry")
             registry.refresh(function()
                 for _, tool in ipairs(lang.tools()) do
                     local ok, pkg = pcall(registry.get_package, tool)
-                    if ok and not pkg:is_installed() then pkg:install() end
+                    if ok and not pkg:is_installed() then
+                        pkg:install()
+                    end
                 end
             end)
         end,
     },
 
-    -- LSP server configs, wired with blink.cmp capabilities.
     {
         "neovim/nvim-lspconfig",
         dependencies = { "saghen/blink.cmp" },
@@ -58,35 +53,26 @@ return {
             local capabilities = require("blink.cmp").get_lsp_capabilities()
 
             for _, spec in pairs(lang.active()) do
-                if spec.lsp and spec.lsp.servers then
-                    for name, cfg in pairs(spec.lsp.servers) do
-                        cfg = type(cfg) == "function" and cfg() or cfg
-                        cfg.capabilities = capabilities
-                        vim.lsp.config(name, cfg)
-                        vim.lsp.enable(name)
-                    end
+                for name, cfg in pairs(spec.lsp and spec.lsp.servers or {}) do
+                    -- A config may be a function, for settings that need a
+                    -- plugin loaded first (jsonls + SchemaStore).
+                    cfg = type(cfg) == "function" and cfg() or cfg
+                    cfg.capabilities = capabilities
+                    vim.lsp.config(name, cfg)
+                    vim.lsp.enable(name)
                 end
             end
 
+            -- Only what Neovim has no default for; see config/keymaps.lua.
             vim.api.nvim_create_autocmd("LspAttach", {
-                group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+                group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
                 callback = function(ev)
                     local function map(lhs, rhs, desc)
                         vim.keymap.set("n", lhs, rhs, { buffer = ev.buf, desc = desc })
                     end
-                    map("gD", vim.lsp.buf.declaration, "Go to declaration")
                     map("gd", vim.lsp.buf.definition, "Go to definition")
+                    map("gD", vim.lsp.buf.declaration, "Go to declaration")
                     map("<C-k>", vim.lsp.buf.signature_help, "Signature help")
-                    -- Inlay hints stay off by default; <leader>th turns them on
-                    -- for the current buffer, <leader>tH for every buffer.
-                    map("<leader>th", function()
-                        local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf })
-                        vim.lsp.inlay_hint.enable(not enabled, { bufnr = ev.buf })
-                    end, "Toggle inlay hints (buffer)")
-                    map("<leader>tH", function()
-                        local enabled = vim.lsp.inlay_hint.is_enabled()
-                        vim.lsp.inlay_hint.enable(not enabled)
-                    end, "Toggle inlay hints (global)")
                 end,
             })
         end,

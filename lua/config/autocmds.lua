@@ -1,31 +1,49 @@
--- Autosave on InsertLeave (real, writable, modified file buffers only)
-vim.api.nvim_create_autocmd("InsertLeave", {
-    callback = function()
-        local buf = vim.api.nvim_get_current_buf()
-        if vim.bo[buf].buftype ~= "" then return end
-        if not vim.bo[buf].modifiable or vim.bo[buf].readonly then return end
-        if not vim.bo[buf].modified then return end
-        if vim.api.nvim_buf_get_name(buf) == "" then return end
+-- Editor-wide autocommands; plugin- and language-specific ones live with that
+-- plugin spec or language file. One group, cleared on load, so re-sourcing
+-- this file replaces them rather than stacking a second copy.
+local group = vim.api.nvim_create_augroup("UserAutocmds", { clear = true })
+
+local function autocmd(event, opts)
+    opts.group = group
+    vim.api.nvim_create_autocmd(event, opts)
+end
+
+-- Autosave real files only: no terminals, pickers, scratch or unnamed buffers.
+autocmd("InsertLeave", {
+    callback = function(ev)
+        local bo = vim.bo[ev.buf]
+        if bo.buftype ~= "" or bo.readonly or not bo.modifiable or not bo.modified then
+            return
+        end
+        if vim.api.nvim_buf_get_name(ev.buf) == "" then
+            return
+        end
         vim.cmd("silent! write")
     end,
 })
 
--- Highlight on yank
-vim.api.nvim_create_autocmd("TextYankPost", {
+autocmd("TextYankPost", {
+    desc = "Briefly highlight the yanked text",
     callback = function()
         vim.hl.on_yank({ higroup = "Visual", timeout = 200 })
     end,
 })
 
--- Reload externally-modified files ('autoread' is on by default)
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
-    pattern = "*",
+autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
+    desc = "Reload files changed outside Neovim ('autoread' is on by default)",
     command = "checktime",
 })
 
--- 2-space indent for JS/TS/JSON
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "javascript", "typescript", "json" },
+autocmd("FileType", {
+    desc = "2-space indent for JS/TS/JSON",
+    pattern = {
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "json",
+        "jsonc",
+    },
     callback = function()
         vim.opt_local.tabstop = 2
         vim.opt_local.shiftwidth = 2

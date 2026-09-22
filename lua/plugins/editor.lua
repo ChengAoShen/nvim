@@ -1,46 +1,113 @@
+-- Ordered by repository name.
 return {
-    -- Better text objects
+    { "echasnovski/mini.ai", event = "VeryLazy", opts = {} },
+
     {
-        "echasnovski/mini.ai",
+        "echasnovski/mini.move",
         event = "VeryLazy",
-        config = true,
+        opts = {
+            -- J/K rather than the default <M-j>/<M-k> in visual mode.
+            mappings = {
+                left = "<M-h>",
+                right = "<M-l>",
+                down = "J",
+                up = "K",
+                line_left = "<M-h>",
+                line_right = "<M-l>",
+                line_down = "<M-j>",
+                line_up = "<M-k>",
+            },
+        },
     },
 
-    -- Auto-close pairs
     {
-        "windwp/nvim-autopairs",
-        event = "InsertEnter",
-        config = true,
+        "folke/flash.nvim",
+        lazy = true,
+        opts = {
+            -- Inline labels with priority below inlay hints (default 4096), so
+            -- a label renders right after the match, not after the LSP type.
+            label = { style = "inline" },
+            highlight = { priority = 1000 },
+        },
+        keys = {
+            {
+                "s",
+                mode = { "n", "x", "o" },
+                function()
+                    require("flash").jump()
+                end,
+                desc = "Flash",
+            },
+            -- No `x`: visual-mode S is nvim-surround's, and it would silently
+            -- win this anyway by loading later.
+            {
+                "S",
+                mode = { "n", "o" },
+                function()
+                    require("flash").treesitter()
+                end,
+                desc = "Flash Treesitter",
+            },
+            {
+                "r",
+                mode = "o",
+                function()
+                    require("flash").remote()
+                end,
+                desc = "Remote Flash",
+            },
+            {
+                "R",
+                mode = { "o", "x" },
+                function()
+                    require("flash").treesitter_search()
+                end,
+                desc = "Treesitter Search",
+            },
+            {
+                "<c-s>",
+                mode = { "c" },
+                function()
+                    require("flash").toggle()
+                end,
+                desc = "Toggle Flash Search",
+            },
+        },
     },
 
-    -- Surround text editing
-    {
-        "kylechui/nvim-surround",
-        event = "VeryLazy",
-        config = true,
-    },
-
-    -- Highlight TODOFIXME comments (picker via snacks)
     {
         "folke/todo-comments.nvim",
         event = "BufReadPost",
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = {},
         keys = {
-            { "<leader>ft", function() Snacks.picker.todo_comments() end,        desc = "Todo comments" },
-            { "]t",         function() require("todo-comments").jump_next() end, desc = "Next todo" },
-            { "[t",         function() require("todo-comments").jump_prev() end, desc = "Prev todo" },
+            {
+                "<leader>ft",
+                function()
+                    Snacks.picker.todo_comments()
+                end,
+                desc = "Todo comments",
+            },
+            {
+                "]t",
+                function()
+                    require("todo-comments").jump_next()
+                end,
+                desc = "Next todo",
+            },
+            {
+                "[t",
+                function()
+                    require("todo-comments").jump_prev()
+                end,
+                desc = "Prev todo",
+            },
         },
     },
 
-    -- Keybinding hints
-    {
-        "folke/which-key.nvim",
-        event = "VeryLazy",
-        config = true,
-    },
+    { "folke/which-key.nvim", event = "VeryLazy", opts = {} },
+    { "kylechui/nvim-surround", event = "VeryLazy", opts = {} },
 
-    -- Seamless window/tmux navigation
     {
         "mrjones2014/smart-splits.nvim",
         lazy = true,
@@ -49,41 +116,73 @@ return {
         -- into a 'timeoutlen' wait, and swallows it outright when the next
         -- keystroke is h/j/k/l (" how", " list", " just"...).
         keys = {
-            { "<leader>h", function() require("smart-splits").move_cursor_left() end,  mode = "n", desc = "Move to left split" },
-            { "<leader>j", function() require("smart-splits").move_cursor_down() end,  mode = "n", desc = "Move to split below" },
-            { "<leader>k", function() require("smart-splits").move_cursor_up() end,    mode = "n", desc = "Move to split above" },
-            { "<leader>l", function() require("smart-splits").move_cursor_right() end, mode = "n", desc = "Move to right split" },
-            -- Other option
-            { "<C-h>",     function() require("smart-splits").move_cursor_left() end,  mode = "t", desc = "Move to left split" },
-            { "<C-j>",     function() require("smart-splits").move_cursor_down() end,  mode = "t", desc = "Move to split below" },
-            { "<C-k>",     function() require("smart-splits").move_cursor_up() end,    mode = "t", desc = "Move to split above" },
-            { "<C-l>",     function() require("smart-splits").move_cursor_right() end, mode = "t", desc = "Move to right split" },
+            {
+                "<leader>h",
+                function()
+                    require("smart-splits").move_cursor_left()
+                end,
+                mode = "n",
+                desc = "Move to left split",
+            },
+            {
+                "<leader>j",
+                function()
+                    require("smart-splits").move_cursor_down()
+                end,
+                mode = "n",
+                desc = "Move to split below",
+            },
+            {
+                "<leader>k",
+                function()
+                    require("smart-splits").move_cursor_up()
+                end,
+                mode = "n",
+                desc = "Move to split above",
+            },
+            {
+                "<leader>l",
+                function()
+                    require("smart-splits").move_cursor_right()
+                end,
+                mode = "n",
+                desc = "Move to right split",
+            },
+            {
+                "<C-h>",
+                function()
+                    require("smart-splits").move_cursor_left()
+                end,
+                mode = "t",
+                desc = "Move to left split",
+            },
+            {
+                "<C-j>",
+                function()
+                    require("smart-splits").move_cursor_down()
+                end,
+                mode = "t",
+                desc = "Move to split below",
+            },
+            {
+                "<C-k>",
+                function()
+                    require("smart-splits").move_cursor_up()
+                end,
+                mode = "t",
+                desc = "Move to split above",
+            },
+            {
+                "<C-l>",
+                function()
+                    require("smart-splits").move_cursor_right()
+                end,
+                mode = "t",
+                desc = "Move to right split",
+            },
         },
     },
 
-    -- Enhanced jump/search motions
-    {
-        "folke/flash.nvim",
-        lazy = true,
-        opts = {
-            -- Inline labels with priority below inlay hints (default 4096),
-            -- so labels render right after the match instead of after the
-            -- LSP type annotation.
-            label = { style = "inline" },
-            highlight = { priority = 1000 },
-        },
-        keys = {
-            { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-            { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
-            { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
-            { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-            { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
-        },
-    },
-
-    -- Activity tracking (WakaTime)
-    {
-        "wakatime/vim-wakatime",
-        event = "VeryLazy",
-    },
+    { "wakatime/vim-wakatime", event = "VeryLazy" },
+    { "windwp/nvim-autopairs", event = "InsertEnter", opts = {} },
 }

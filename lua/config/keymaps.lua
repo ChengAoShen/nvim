@@ -1,13 +1,25 @@
-local keymap = vim.keymap
-keymap.set("i", "jj", "<ESC>", { desc = "Exit insert mode" })
-keymap.set("n", "<leader>nh", "<cmd>nohl<CR>", { desc = "Clear search highlight" })
-keymap.set("n", "]b", "<cmd>bnext<CR>", { desc = "Next buffer" })
-keymap.set("n", "[b", "<cmd>bprevious<CR>", { desc = "Prev buffer" })
+-- Global keymaps. Plugin keymaps live in that plugin's `keys` spec, and
+-- buffer-local LSP ones in plugins/lsp.lua. Neovim 0.11+ already provides
+-- grn/gra/grr/gri/grt/gO and ]d/[d, so none of those are redefined here.
+local map = vim.keymap.set
 
--- `x` not `v`: `v` also covers select mode, where snippet placeholders live.
--- There, typing must replace the selection, not run these commands.
-keymap.set("x", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
-keymap.set("x", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+map("i", "jj", "<ESC>", { desc = "Exit insert mode" })
+map("n", "<leader>nh", "<cmd>nohl<CR>", { desc = "Clear search highlight" })
 
-keymap.set("n", "gh", vim.diagnostic.open_float, { desc = "Diagnostic float" })
-keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostics to loclist" })
+map("n", "]b", "<cmd>bnext<CR>", { desc = "Next buffer" })
+map("n", "[b", "<cmd>bprevious<CR>", { desc = "Prev buffer" })
+
+map("n", "gh", vim.diagnostic.open_float, { desc = "Diagnostic float" })
+map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostics to loclist" })
+
+-- Inlay hints start off; these work with no language server attached, which is
+-- why they are not in the LspAttach block.
+map("n", "<leader>th", function()
+    vim.lsp.inlay_hint.enable(
+        not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }),
+        { bufnr = 0 }
+    )
+end, { desc = "Toggle inlay hints (buffer)" })
+map("n", "<leader>tH", function()
+    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+end, { desc = "Toggle inlay hints (global)" })

@@ -1,6 +1,5 @@
--- Formatter: filetype mapping and per-language formatter definitions come from
--- lua/langs/ via lang.lua. Only formatters shared across languages (dprint)
--- are defined here.
+-- Formatter. Which formatter runs for which filetype comes from lua/langs/ via
+-- lang.lua; only formatters shared across languages (dprint) are defined here.
 local lang = require("lang")
 
 return {
@@ -18,11 +17,14 @@ return {
             },
         },
         config = function()
-            local dprint_config_names = { "dprint.json", ".dprint.json", "dprint.jsonc", ".dprint.jsonc" }
-            local fallback_dprint_config = vim.fn.stdpath("config") .. "/dprint.json"
+            -- dprint insists on a config file: prefer the project's, fall back
+            -- to the one shipped next to this config.
+            local fallback_config = vim.fn.stdpath("config") .. "/dprint.json"
 
-            local function find_dprint_config(ctx)
-                return vim.fs.find(dprint_config_names, { path = ctx.dirname, upward = true })[1]
+            local function find_config(ctx)
+                local names =
+                    { "dprint.json", ".dprint.json", "dprint.jsonc", ".dprint.jsonc" }
+                return vim.fs.find(names, { path = ctx.dirname, upward = true })[1]
             end
 
             local formatters = {
@@ -32,19 +34,18 @@ return {
                         return {
                             "fmt",
                             "--config",
-                            find_dprint_config(ctx) or fallback_dprint_config,
+                            find_config(ctx) or fallback_config,
                             "--stdin",
                             "$FILENAME",
                         }
                     end,
                     cwd = function(_, ctx)
-                        local config = find_dprint_config(ctx)
+                        local config = find_config(ctx)
                         return config and vim.fs.dirname(config) or nil
                     end,
                 },
             }
 
-            -- Language-specific definitions (e.g. latexindent from langs/tex.lua).
             for name, def in pairs(lang.formatters()) do
                 formatters[name] = def
             end
