@@ -1,7 +1,3 @@
--- Copy always goes through the terminal (OSC 52): works the same locally, over
--- SSH and in WSL, and keeps UTF-8 intact (unlike clip.exe). WezTerm doesn't
--- answer OSC 52 reads, so paste uses a local tool when there is one, otherwise
--- the last thing copied in this Neovim (outside text: WezTerm's Ctrl+Shift+V).
 local osc52 = require("vim.ui.clipboard.osc52")
 local last = {}
 
