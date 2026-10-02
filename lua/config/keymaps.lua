@@ -11,15 +11,4 @@ map("n", "[b", "<cmd>bprevious<CR>", { desc = "Prev buffer" })
 
 map("n", "gh", vim.diagnostic.open_float, { desc = "Diagnostic float" })
 map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostics to loclist" })
-
--- Inlay hints start off; these work with no language server attached, which is
--- why they are not in the LspAttach block.
-map("n", "<leader>th", function()
-    vim.lsp.inlay_hint.enable(
-        not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }),
-        { bufnr = 0 }
-    )
-end, { desc = "Toggle inlay hints (buffer)" })
-map("n", "<leader>tH", function()
-    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-end, { desc = "Toggle inlay hints (global)" })
+-- <leader>th (inlay hints) is a Snacks toggle: plugins/ui.lua.

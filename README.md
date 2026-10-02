@@ -83,7 +83,7 @@ Leader: `<Space>`. Local leader: `\`.
 | `K` | Normal | Hover documentation (builtin) |
 | `grn` / `gra` / `grr` / `gri` / `grt` / `gO` | Normal | Rename / Code action / References / Implementation / Type definition / Symbols (builtin) |
 | `<C-k>` | Normal | Signature help |
-| `<Space>th` / `<Space>tH` | Normal | Toggle inlay hints (buffer / global) |
+| `<Space>th` | Normal | Toggle inlay hints (buffer) |
 | `<Space>fm` | Normal/Visual | Format buffer / selection |
 
 ### Search & files (snacks)

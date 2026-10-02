@@ -1,30 +1,30 @@
 -- Ordered by repository name.
+
+-- `snacks("picker.files")` -> a function calling Snacks.picker.files().
+local function snacks(path)
+    return function()
+        local fn = Snacks
+        for key in path:gmatch("[^.]+") do
+            fn = fn[key]
+        end
+        fn()
+    end
+end
+
+local function dropbar(fn)
+    return function()
+        require("dropbar.api")[fn]()
+    end
+end
+
 return {
     {
         "Bekaboo/dropbar.nvim",
         event = "BufReadPost",
         keys = {
-            {
-                "<leader>;",
-                function()
-                    require("dropbar.api").pick()
-                end,
-                desc = "Pick winbar symbol",
-            },
-            {
-                "[;",
-                function()
-                    require("dropbar.api").goto_context_start()
-                end,
-                desc = "Go to context start",
-            },
-            {
-                "];",
-                function()
-                    require("dropbar.api").select_next_context()
-                end,
-                desc = "Select next context",
-            },
+            { "<leader>;", dropbar("pick"), desc = "Pick winbar symbol" },
+            { "[;", dropbar("goto_context_start"), desc = "Go to context start" },
+            { "];", dropbar("select_next_context"), desc = "Select next context" },
         },
     },
 
@@ -72,8 +72,6 @@ return {
                 bottom_search = true,
                 command_palette = true,
                 long_message_to_split = true,
-                inc_rename = false,
-                lsp_doc_border = false,
             },
             -- Centred, overriding the command_palette preset's top position.
             views = {
@@ -118,130 +116,53 @@ return {
             },
             scroll = { enabled = true },
         },
+        config = function(_, opts)
+            require("snacks").setup(opts)
+            Snacks.toggle.inlay_hints():map("<leader>th")
+        end,
         keys = {
-            {
-                "<leader>ff",
-                function()
-                    Snacks.picker.files()
-                end,
-                desc = "Find files",
-            },
-            {
-                "<leader>fg",
-                function()
-                    Snacks.picker.grep()
-                end,
-                desc = "Live grep",
-            },
-            {
-                "<leader><space>",
-                function()
-                    Snacks.picker.buffers()
-                end,
-                desc = "Buffers",
-            },
-            {
-                "<leader>fh",
-                function()
-                    Snacks.picker.help()
-                end,
-                desc = "Help tags",
-            },
-            {
-                "<leader>?",
-                function()
-                    Snacks.picker.recent()
-                end,
-                desc = "Recent files",
-            },
-            {
-                "<leader>/",
-                function()
-                    Snacks.picker.lines()
-                end,
-                desc = "Search in buffer",
-            },
+            { "<leader>ff", snacks("picker.files"), desc = "Find files" },
+            { "<leader>fg", snacks("picker.grep"), desc = "Live grep" },
+            { "<leader><space>", snacks("picker.buffers"), desc = "Buffers" },
+            { "<leader>fh", snacks("picker.help"), desc = "Help tags" },
+            { "<leader>?", snacks("picker.recent"), desc = "Recent files" },
+            { "<leader>/", snacks("picker.lines"), desc = "Search in buffer" },
             {
                 "<C-N>",
-                function()
-                    Snacks.explorer()
-                end,
-                desc = "Open file explorer",
+                snacks("explorer"),
                 mode = { "n", "t" },
+                desc = "Open file explorer",
             },
 
             {
                 "<C-\\>",
-                function()
-                    Snacks.terminal.toggle()
-                end,
-                desc = "Toggle terminal",
+                snacks("terminal.toggle"),
                 mode = { "n", "t" },
+                desc = "Toggle terminal",
             },
-            {
-                "<leader>tt",
-                function()
-                    Snacks.terminal()
-                end,
-                desc = "New terminal",
-            },
+            { "<leader>tt", snacks("terminal"), desc = "New terminal" },
 
-            {
-                "<leader>gg",
-                function()
-                    Snacks.lazygit()
-                end,
-                desc = "Lazygit",
-            },
-            {
-                "<leader>gf",
-                function()
-                    Snacks.lazygit.log_file()
-                end,
-                desc = "Lazygit file history",
-            },
-            {
-                "<leader>gl",
-                function()
-                    Snacks.lazygit.log()
-                end,
-                desc = "Lazygit log",
-            },
-            {
-                "<leader>gb",
-                function()
-                    Snacks.picker.git_log_line()
-                end,
-                desc = "Git blame line",
-            },
-            {
-                "<leader>gs",
-                function()
-                    Snacks.picker.git_status()
-                end,
-                desc = "Git status",
-            },
+            { "<leader>gg", snacks("lazygit"), desc = "Lazygit" },
+            { "<leader>gf", snacks("lazygit.log_file"), desc = "Lazygit file history" },
+            { "<leader>gl", snacks("lazygit.log"), desc = "Lazygit log" },
+            { "<leader>gb", snacks("picker.git_log_line"), desc = "Git blame line" },
+            { "<leader>gs", snacks("picker.git_status"), desc = "Git status" },
         },
     },
 
     {
         "nvim-lualine/lualine.nvim",
         event = "VeryLazy",
+        -- Only what differs from lualine's defaults; it merges per section.
         opts = {
             options = {
-                theme = "auto",
                 globalstatus = true,
                 always_show_tabline = false, -- hidden until a second tabpage exists
                 section_separators = { left = "", right = "" },
                 component_separators = { left = "", right = "" },
             },
             sections = {
-                lualine_a = { "mode" },
-                lualine_b = { "branch", "diff", "diagnostics" },
                 lualine_c = { { "buffers", mode = 2, show_filename_only = true } },
-                lualine_x = { "encoding", "fileformat", "filetype" },
-                lualine_y = { "progress" },
-                lualine_z = { "location" },
             },
             tabline = {
                 lualine_a = {
