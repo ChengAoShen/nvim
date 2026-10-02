@@ -3,9 +3,7 @@ return {
     lsp = {
         mason = { "lua_ls" },
         servers = {
-            lua_ls = {
-                settings = { Lua = { diagnostics = { globals = { "vim" } } } },
-            },
+            lua_ls = {},
         },
     },
     treesitter = { "lua", "luadoc" },

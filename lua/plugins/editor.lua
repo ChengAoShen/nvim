@@ -1,4 +1,18 @@
 -- Ordered by repository name.
+
+-- `flash("jump")` -> a function calling require("flash").jump().
+local function flash(fn)
+    return function()
+        require("flash")[fn]()
+    end
+end
+
+local function todo(fn)
+    return function()
+        require("todo-comments")[fn]()
+    end
+end
+
 return {
     { "echasnovski/mini.ai", event = "VeryLazy", opts = {} },
 
@@ -30,48 +44,23 @@ return {
             highlight = { priority = 1000 },
         },
         keys = {
-            {
-                "s",
-                mode = { "n", "x", "o" },
-                function()
-                    require("flash").jump()
-                end,
-                desc = "Flash",
-            },
+            { "s", flash("jump"), mode = { "n", "x", "o" }, desc = "Flash" },
             -- No `x`: visual-mode S is nvim-surround's, and it would silently
             -- win this anyway by loading later.
             {
                 "S",
+                flash("treesitter"),
                 mode = { "n", "o" },
-                function()
-                    require("flash").treesitter()
-                end,
                 desc = "Flash Treesitter",
             },
-            {
-                "r",
-                mode = "o",
-                function()
-                    require("flash").remote()
-                end,
-                desc = "Remote Flash",
-            },
+            { "r", flash("remote"), mode = "o", desc = "Remote Flash" },
             {
                 "R",
+                flash("treesitter_search"),
                 mode = { "o", "x" },
-                function()
-                    require("flash").treesitter_search()
-                end,
                 desc = "Treesitter Search",
             },
-            {
-                "<c-s>",
-                mode = { "c" },
-                function()
-                    require("flash").toggle()
-                end,
-                desc = "Toggle Flash Search",
-            },
+            { "<c-s>", flash("toggle"), mode = "c", desc = "Toggle Flash Search" },
         },
     },
 
@@ -88,20 +77,8 @@ return {
                 end,
                 desc = "Todo comments",
             },
-            {
-                "]t",
-                function()
-                    require("todo-comments").jump_next()
-                end,
-                desc = "Next todo",
-            },
-            {
-                "[t",
-                function()
-                    require("todo-comments").jump_prev()
-                end,
-                desc = "Prev todo",
-            },
+            { "]t", todo("jump_next"), desc = "Next todo" },
+            { "[t", todo("jump_prev"), desc = "Prev todo" },
         },
     },
 

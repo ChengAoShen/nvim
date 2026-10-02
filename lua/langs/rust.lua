@@ -36,18 +36,11 @@ return {
                         end,
                         default_settings = {
                             ["rust-analyzer"] = {
-                                cargo = {
-                                    allFeatures = true,
-                                    loadOutDirsFromCheck = true,
-                                    runBuildScripts = true,
-                                },
-                                checkOnSave = true,
+                                cargo = { features = "all" },
                                 check = {
                                     command = "clippy",
                                     extraArgs = { "--no-deps" },
                                 },
-                                procMacro = { enable = true },
-                                inlayHints = { enable = true },
                             },
                         },
                     },
