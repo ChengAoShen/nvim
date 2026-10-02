@@ -41,24 +41,7 @@ opt.exrc = true -- trust per-project .nvim.lua; Neovim asks before sourcing
 -- Windows
 opt.splitright = true
 opt.splitbelow = true
-opt.clipboard:append("unnamedplus")
-
--- WSL: copy through the terminal (OSC 52, keeps UTF-8 intact, unlike clip.exe)
--- and paste from Windows' clipboard.
-if vim.fn.has("wsl") == 1 then
-    local osc52 = require("vim.ui.clipboard.osc52")
-    local paste = {
-        "powershell.exe", "-NoLogo", "-NoProfile", "-Command",
-        "[Console]::OutputEncoding = [Text.Encoding]::UTF8;"
-            .. "[Console]::Out.Write((Get-Clipboard -Raw) -replace \"`r\", '')",
-    }
-    vim.g.clipboard = {
-        name = "wsl",
-        copy = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
-        paste = { ["+"] = paste, ["*"] = paste },
-        cache_enabled = 0,
-    }
-end
+opt.clipboard = "unnamedplus" -- provider: config/clipboard.lua
 
 -- Open files unfolded: folds come from treesitter or a filetype's own foldexpr
 -- (VimTeX), and Neovim's default foldlevel=0 would close every one on open.

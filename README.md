@@ -36,6 +36,7 @@ mason, driven by `lua/langs/`.
     ├── config/
     │   ├── lazy.lua        # lazy.nvim bootstrap & setup
     │   ├── options.lua     # vim options & diagnostics appearance
+    │   ├── clipboard.lua   # OSC 52 copy; paste via WSL/wl-paste/last yank
     │   ├── keymaps.lua     # Global keymaps
     │   ├── autocmds.lua    # Autosave, yank highlight, autoread
     │   └── colors.lua      # catppuccin & every highlight override
