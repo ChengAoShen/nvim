@@ -115,72 +115,21 @@ return {
         -- so a `t`-mode <leader>h mapping turns every space typed in a terminal
         -- into a 'timeoutlen' wait, and swallows it outright when the next
         -- keystroke is h/j/k/l (" how", " list", " just"...).
-        keys = {
-            {
-                "<leader>h",
-                function()
-                    require("smart-splits").move_cursor_left()
-                end,
-                mode = "n",
-                desc = "Move to left split",
-            },
-            {
-                "<leader>j",
-                function()
-                    require("smart-splits").move_cursor_down()
-                end,
-                mode = "n",
-                desc = "Move to split below",
-            },
-            {
-                "<leader>k",
-                function()
-                    require("smart-splits").move_cursor_up()
-                end,
-                mode = "n",
-                desc = "Move to split above",
-            },
-            {
-                "<leader>l",
-                function()
-                    require("smart-splits").move_cursor_right()
-                end,
-                mode = "n",
-                desc = "Move to right split",
-            },
-            {
-                "<C-h>",
-                function()
-                    require("smart-splits").move_cursor_left()
-                end,
-                mode = "t",
-                desc = "Move to left split",
-            },
-            {
-                "<C-j>",
-                function()
-                    require("smart-splits").move_cursor_down()
-                end,
-                mode = "t",
-                desc = "Move to split below",
-            },
-            {
-                "<C-k>",
-                function()
-                    require("smart-splits").move_cursor_up()
-                end,
-                mode = "t",
-                desc = "Move to split above",
-            },
-            {
-                "<C-l>",
-                function()
-                    require("smart-splits").move_cursor_right()
-                end,
-                mode = "t",
-                desc = "Move to right split",
-            },
-        },
+        keys = function()
+            local keys = {}
+            for key, dir in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
+                local function move()
+                    require("smart-splits")["move_cursor_" .. dir]()
+                end
+                local desc = "Move to " .. dir .. " split"
+                table.insert(keys, { "<leader>" .. key, move, mode = "n", desc = desc })
+                table.insert(
+                    keys,
+                    { "<C-" .. key .. ">", move, mode = "t", desc = desc }
+                )
+            end
+            return keys
+        end,
     },
 
     { "wakatime/vim-wakatime", event = "VeryLazy" },

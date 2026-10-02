@@ -19,31 +19,20 @@ return {
                     },
                     server = {
                         on_attach = function(_, bufnr)
-                            local opts = { buffer = bufnr }
-                            vim.keymap.set(
-                                "n",
-                                "<leader>rca",
-                                function()
-                                    vim.cmd.RustLsp("codeAction")
-                                end,
-                                vim.tbl_extend(
-                                    "force",
-                                    opts,
-                                    { desc = "Rust code action" }
+                            local function map(lhs, rhs, desc)
+                                vim.keymap.set(
+                                    "n",
+                                    lhs,
+                                    rhs,
+                                    { buffer = bufnr, desc = desc }
                                 )
-                            )
-                            vim.keymap.set(
-                                "n",
-                                "K",
-                                function()
-                                    vim.cmd.RustLsp({ "hover", "actions" })
-                                end,
-                                vim.tbl_extend(
-                                    "force",
-                                    opts,
-                                    { desc = "Rust hover + actions" }
-                                )
-                            )
+                            end
+                            map("<leader>rca", function()
+                                vim.cmd.RustLsp("codeAction")
+                            end, "Rust code action")
+                            map("K", function()
+                                vim.cmd.RustLsp({ "hover", "actions" })
+                            end, "Rust hover + actions")
                         end,
                         default_settings = {
                             ["rust-analyzer"] = {
