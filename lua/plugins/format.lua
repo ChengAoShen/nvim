@@ -1,12 +1,13 @@
 -- Formatter. Which formatter runs for which filetype comes from lua/langs/ via
 -- lang.lua; only formatters shared across languages (dprint) are defined here.
--- Manual only (<leader>fm): autosave writes on every InsertLeave, so
--- format-on-save would reformat half-written code and other people's files.
+-- Formats on :w, but not on the InsertLeave autosave (config/autocmds.lua
+-- sets vim.b.autosave): that would reformat half-written code on every <Esc>.
 local lang = require("lang")
 
 return {
     {
         "stevearc/conform.nvim",
+        event = "BufWritePre",
         cmd = "ConformInfo",
         keys = {
             {
@@ -55,6 +56,12 @@ return {
             require("conform").setup({
                 formatters_by_ft = lang.formatters_by_ft(),
                 formatters = formatters,
+                format_on_save = function(bufnr)
+                    if vim.b[bufnr].autosave then
+                        return
+                    end
+                    return { lsp_format = "fallback", timeout_ms = 2000 }
+                end,
             })
         end,
     },

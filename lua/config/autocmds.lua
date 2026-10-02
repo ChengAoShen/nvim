@@ -9,6 +9,7 @@ local function autocmd(event, opts)
 end
 
 -- Autosave real files only: no terminals, pickers, scratch or unnamed buffers.
+-- vim.b.autosave tells format-on-save (plugins/format.lua) to skip this write.
 autocmd("InsertLeave", {
     callback = function(ev)
         local bo = vim.bo[ev.buf]
@@ -18,7 +19,9 @@ autocmd("InsertLeave", {
         if vim.api.nvim_buf_get_name(ev.buf) == "" then
             return
         end
+        vim.b[ev.buf].autosave = true
         vim.cmd("silent! write")
+        vim.b[ev.buf].autosave = nil
     end,
 })
 
