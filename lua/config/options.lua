@@ -15,7 +15,6 @@ opt.relativenumber = true
 opt.cursorline = true
 opt.signcolumn = "yes" -- always reserve it, so the text never shifts
 opt.termguicolors = true -- colours and highlight groups: config/colors.lua
-opt.guifont = "FiraCode Nerd Font Mono:h18"
 opt.mouse = "a"
 opt.wrap = false
 opt.linebreak = true
