@@ -5,6 +5,9 @@ return {
         mason = { "rust_analyzer", "taplo" },
         servers = { taplo = {} },
     },
+    -- rustaceanvim finds mason's codelldb and registers cargo targets with
+    -- nvim-dap on its own, so <leader>dc works without further setup.
+    tools = { "codelldb" },
     treesitter = { "rust", "toml" },
     plugins = {
         -- lazy = false per upstream docs: the plugin gates itself on filetype.
@@ -30,6 +33,9 @@ return {
                             map("<leader>rca", function()
                                 vim.cmd.RustLsp("codeAction")
                             end, "Rust code action")
+                            map("<leader>rd", function()
+                                vim.cmd.RustLsp("debuggables")
+                            end, "Rust debuggables")
                             map("K", function()
                                 vim.cmd.RustLsp({ "hover", "actions" })
                             end, "Rust hover + actions")
