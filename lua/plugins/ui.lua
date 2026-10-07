@@ -85,7 +85,7 @@ return {
     {
         "folke/snacks.nvim",
         lazy = false,
-        priority = 900,
+        priority = 1000,
         opts = {
             dashboard = {
                 enabled = true,

@@ -18,7 +18,7 @@ opt.termguicolors = true -- colours and highlight groups: config/colors.lua
 opt.mouse = "a"
 opt.wrap = false
 opt.linebreak = true
-opt.textwidth = 88
+opt.textwidth = 88 -- used by gq and formatters; typing never auto-wraps
 opt.colorcolumn = "88"
 
 -- Search
@@ -38,6 +38,12 @@ opt.clipboard = "unnamedplus"
 -- Open files unfolded: folds come from treesitter or a filetype's own foldexpr
 -- (VimTeX), and Neovim's default foldlevel=0 would close every one on open.
 opt.foldlevelstart = 99
+
+-- No remote plugins are used; skip the language providers
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
 
 vim.diagnostic.config({
     virtual_text = true,

@@ -12,4 +12,5 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("plugins")
+-- No plugin needs luarocks; disabling it silences the checkhealth error
+require("lazy").setup("plugins", { rocks = { enabled = false } })

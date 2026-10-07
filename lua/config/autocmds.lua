@@ -53,3 +53,10 @@ autocmd("FileType", {
         vim.opt_local.softtabstop = 2
     end,
 })
+
+autocmd("FileType", {
+    desc = "Keep textwidth for gq/formatters, but never auto-wrap while typing",
+    callback = function()
+        vim.opt_local.formatoptions:remove({ "t", "c" })
+    end,
+})

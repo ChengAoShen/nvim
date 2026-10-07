@@ -7,7 +7,8 @@
 -- No treesitter parser either: tree-sitter-manager's registry has no `lean`,
 -- and lean.nvim ships syntax/lean.vim for highlighting.
 return {
-    enabled = true,
+    -- Off: the Lean toolchain (elan/lake/lean) is not installed
+    enabled = false,
     plugins = {
         {
             "Julian/lean.nvim",
