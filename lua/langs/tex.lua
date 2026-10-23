@@ -80,8 +80,7 @@ return {
                 -- Keep K for LSP hover; texdoc moves to gK.
                 vim.g.vimtex_mappings_disable = { n = { "K" } }
 
-                -- Extra leftovers for a manual :VimtexClean (never on quit:
-                -- .aux/.bbl/.bcf let latexmk build incrementally).
+                -- Extra leftovers for :VimtexClean, which also runs on quit.
                 vim.g.vimtex_compiler_clean_paths = {
                     "*.synctex.gz",
                     "*.bbl",
@@ -92,6 +91,15 @@ return {
                     "*.bcf",
                     "_minted-*",
                 }
+
+                -- Clean on quit: the directory keeps only sources and the PDF.
+                vim.api.nvim_create_autocmd("User", {
+                    pattern = "VimtexEventQuit",
+                    group = vim.api.nvim_create_augroup("UserTexClean", { clear = true }),
+                    callback = function()
+                        vim.fn["vimtex#compiler#clean"](0)
+                    end,
+                })
 
                 vim.g.vimtex_fold_enabled = 1
                 vim.g.vimtex_toc_config = { split_pos = "vert", split_width = 40 }
